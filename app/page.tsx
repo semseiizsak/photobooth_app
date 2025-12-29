@@ -9,11 +9,17 @@ export default function Page() {
 
   const [cameraReady, setCameraReady] = useState(false);
   const [phase, setPhase] = useState<"idle" | "countdown" | "result">("idle");
-
   const [count, setCount] = useState<number | null>(null);
   const [stripUrl, setStripUrl] = useState<string | null>(null);
+  const [showReview, setShowReview] = useState(false);
 
-  // Ask for camera permission on load
+  function triggerReview() {
+    setShowReview(true);
+  }
+
+  /* -------------------------------------------------- */
+  /* Camera permission                                 */
+  /* -------------------------------------------------- */
   useEffect(() => {
     navigator.mediaDevices
       .getUserMedia({ video: true })
@@ -28,6 +34,9 @@ export default function Page() {
       });
   }, []);
 
+  /* -------------------------------------------------- */
+  /* Main sequence                                     */
+  /* -------------------------------------------------- */
   async function startSequence() {
     setStripUrl(null);
 
@@ -51,6 +60,9 @@ export default function Page() {
     setPhase("result");
   }
 
+  /* -------------------------------------------------- */
+  /* Capture frame (true grayscale pixels)              */
+  /* -------------------------------------------------- */
   function capture(): string {
     const video = videoRef.current!;
     const canvas = document.createElement("canvas");
@@ -59,46 +71,59 @@ export default function Page() {
     canvas.height = video.videoHeight;
 
     const ctx = canvas.getContext("2d")!;
-    ctx.filter = "grayscale(100%) contrast(1.15)";
     ctx.drawImage(video, 0, 0);
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const d = imageData.data;
+
+    for (let i = 0; i < d.length; i += 4) {
+      const gray = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+      d[i] = d[i + 1] = d[i + 2] = gray;
+    }
+
+    ctx.putImageData(imageData, 0, 0);
 
     return canvas.toDataURL("image/jpeg", 0.95);
   }
 
+  /* -------------------------------------------------- */
+  /* Build photostrip                                  */
+  /* -------------------------------------------------- */
   async function buildStrip(images: string[]): Promise<string> {
     const canvas = document.createElement("canvas");
 
-    // --- Layout constants (photobooth-correct) ---
     const width = 400;
     const margin = 24;
     const imgWidth = width - margin * 2;
-    const imgHeight = Math.round(imgWidth * 1.25); // classic vertical ratio
+    const imgHeight = Math.round(imgWidth * 1.25);
 
-    // --- Calculate total height dynamically ---
     const height =
-      margin + // top border
+      margin +
       images.length * imgHeight +
       (images.length - 1) * margin +
-      margin; // bottom border
+      margin;
 
     canvas.width = width;
     canvas.height = height;
 
     const ctx = canvas.getContext("2d")!;
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, width, height);
 
-    // --- Draw each photo ---
     for (let i = 0; i < images.length; i++) {
       const img = new Image();
       img.src = images[i];
 
       await new Promise<void>((resolve) => {
         img.onload = () => {
-          const y = margin + i * (imgHeight + margin);
-
-          drawImageCover(ctx, img, margin, y, imgWidth, imgHeight);
-
+          drawImageCover(
+            ctx,
+            img,
+            margin,
+            margin + i * (imgHeight + margin),
+            imgWidth,
+            imgHeight
+          );
           resolve();
         };
       });
@@ -115,27 +140,28 @@ export default function Page() {
     w: number,
     h: number
   ) {
-    const imgRatio = img.width / img.height;
-    const targetRatio = w / h;
+    const ir = img.width / img.height;
+    const tr = w / h;
 
     let sx = 0,
       sy = 0,
       sw = img.width,
       sh = img.height;
 
-    if (imgRatio > targetRatio) {
-      // image is wider → crop sides
-      sw = img.height * targetRatio;
+    if (ir > tr) {
+      sw = img.height * tr;
       sx = (img.width - sw) / 2;
     } else {
-      // image is taller → crop top/bottom
-      sh = img.width / targetRatio;
+      sh = img.width / tr;
       sy = (img.height - sh) / 2;
     }
 
     ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
   }
 
+  /* -------------------------------------------------- */
+  /* Actions                                           */
+  /* -------------------------------------------------- */
   function reset() {
     setStripUrl(null);
     setCount(null);
@@ -146,9 +172,12 @@ export default function Page() {
     window.print();
   }
 
+  /* -------------------------------------------------- */
+  /* Render                                            */
+  /* -------------------------------------------------- */
   return (
     <div className="booth">
-      {/* VIDEO IS ALWAYS MOUNTED */}
+      {/* Camera always mounted */}
       <video
         ref={videoRef}
         autoPlay
@@ -158,36 +187,71 @@ export default function Page() {
         style={{ display: phase === "countdown" ? "block" : "none" }}
       />
 
-      {/* FRAME ONLY WHEN COUNTDOWN */}
       {phase === "countdown" && (
         <>
-          <div className="frame" />
           {count !== null && <div className="counter">{count}</div>}
-          {count == null && <div className="counterfiller">0</div>}
+          {count === null && <div className="counterfiller">0</div>}
         </>
       )}
 
-      {/* IDLE */}
       {phase === "idle" && cameraReady && (
         <button onClick={startSequence}>START</button>
       )}
 
-      {/* RESULT */}
       {phase === "result" && stripUrl && (
         <div className="result">
-          {/* PRINT TARGET */}
           <div className="print-area">
             <img src={stripUrl} alt="photostrip" />
           </div>
 
-          {/* CONTROLS (NOT PRINTED) */}
-          <div style={{ display: "flex", gap: 16 }}>
-            <a href={stripUrl} download="photostrip.jpg">
+          <div className="controls">
+            <a
+              href={stripUrl}
+              download="photostrip.jpg"
+              onClick={triggerReview}
+            >
               <button>DOWNLOAD</button>
             </a>
 
-            <button onClick={printStrip}>PRINT</button>
-            <button onClick={reset}>RESTART</button>
+            <button
+              onClick={() => {
+                printStrip();
+                triggerReview();
+              }}
+            >
+              PRINT
+            </button>
+
+            <button
+              onClick={() => {
+                reset();
+                triggerReview();
+              }}
+            >
+              RESTART
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showReview && (
+        <div className="review-overlay">
+          <div className="review-modal">
+            <div className="review-stars">★★★★★</div>
+
+            <p>Please leave us a 5-star review 💛</p>
+
+            <a
+              href="https://maps.app.goo.gl/ETVCstEqkgRUwtiN9"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button>LEAVE REVIEW</button>
+            </a>
+
+            <button className="secondary" onClick={() => setShowReview(false)}>
+              CLOSE
+            </button>
           </div>
         </div>
       )}

@@ -1,7 +1,41 @@
-html, body {
+:root {
+  --bg: #000;
+  --fg: #fff;
+
+  /* sizing */
+  --gap: clamp(10px, 2vh, 16px);
+  --radius: 16px;
+
+  /* camera/result target sizes */
+  --cam-w: min(90vw, 520px);
+  --cam-h: min(62vh, 680px);
+
+  /* result strip sizing */
+  --strip-max-h: 64vh;
+  --strip-max-w: 90vw;
+
+  /* button */
+  --btn-pad-y: 10px;
+  --btn-pad-x: 18px;
+  --btn-font: clamp(12px, 1.6vw, 14px);
+  --btn-border: rgba(255, 255, 255, 0.42);
+
+  /* countdown */
+  --counter-font: clamp(22px, 3.2vw, 32px);
+  --counter-track: 0.15em;
+}
+
+html,
+body {
   margin: 0;
-  background: black;
-  color: white;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+
+  overflow: hidden;               /* no scroll */
+  overscroll-behavior: none;      /* no bounce */
+  touch-action: manipulation;     /* kiosk-friendly taps */
   font-family: system-ui, -apple-system, BlinkMacSystemFont;
 }
 
@@ -10,81 +44,207 @@ html, body {
   font-weight: 1000;
 }
 
+/* Main app container */
 .booth {
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  gap: var(--gap);
+  padding: max(12px, env(safe-area-inset-top)) 12px
+           max(12px, env(safe-area-inset-bottom));
 }
 
+/* Live camera (only visible during countdown via inline style) */
 .camera {
-  width: 520px;
-  height: 680px;
+  width: var(--cam-w);
+  height: var(--cam-h);
+
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: var(--radius);
+
+  /* preview look */
   filter: grayscale(100%) contrast(1.15);
   transform: scaleX(-1);
+
+  /* reduce iOS rendering jank */
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0) scaleX(-1);
 }
 
-.counter {
-  margin-top: 28px;
-  font-size: 32px;
-  letter-spacing: 0.15em;
-  opacity: 0.9;
+/* Countdown */
+.counter,
+.counterfiller {
+  margin-top: 0;
+  font-size: var(--counter-font);
+  letter-spacing: var(--counter-track);
+  line-height: 1;
+  opacity: 0.92;
+  user-select: none;
 }
 
 .counterfiller {
-  margin-top: 28px;
-  font-size: 32px;
-  letter-spacing: 0.15em;
   opacity: 0;
-  color: #000;
 }
 
+/* Buttons */
 button {
-  margin-top: 24px;
-  background: none;
-  border: 1px solid rgba(255,255,255,0.4);
-  color: white;
-  padding: 12px 24px;
-  font-size: 14px;
+  margin-top: 0;
+  background: transparent;
+  border: 1px solid var(--btn-border);
+  color: var(--fg);
+
+  padding: var(--btn-pad-y) var(--btn-pad-x);
+  font-size: var(--btn-font);
   letter-spacing: 0.1em;
+
   cursor: pointer;
+  border-radius: 12px;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
+button:active {
+  transform: translateY(1px);
+}
+
+/* Result view */
 .result {
+  height: 100vh;
+  width: 100vw;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24px;
-  max-height: 100vh;
+
+  gap: var(--gap);
+  padding: max(12px, env(safe-area-inset-top)) 12px
+           max(12px, env(safe-area-inset-bottom));
 }
 
+/* Strip image */
 .result img {
-  max-height: 70vh;
+  max-height: var(--strip-max-h);
+  max-width: var(--strip-max-w);
   width: auto;
+  height: auto;
+
+  border-radius: 0; /* no rounding on result */
+  display: block;
 }
 
+/* Optional: better wrapping for button row if your inline style uses flex */
+.result > div {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =========================================================
+   Review popup
+   ========================================================= */
+
+.review-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.review-modal a,
+.review-modal button {
+  width: 100%;
+  max-width: 150px;
+}
+
+
+.review-modal {
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 18px;
+
+  padding: 28px 24px;
+  width: min(90vw, 360px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  text-align: center;
+}
+
+.review-stars {
+  font-size: 28px;
+  letter-spacing: 0.15em;
+}
+
+.review-modal p {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+}
+
+.review-modal button.secondary {
+  border-color: rgba(255, 255, 255, 0.25);
+  opacity: 0.85;
+}
+
+
+
+/* Small phones */
+@media (max-width: 390px) {
+  :root {
+    --cam-h: min(58vh, 640px);
+    --strip-max-h: 60vh;
+  }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+  :root {
+    --gap: 16px;
+  }
+}
+
+/* =========================================================
+   Print — print only the strip, no UI
+   Requires markup: <div class="print-area"><img .../></div>
+   ========================================================= */
 @media print {
   @page {
     size: auto;
     margin: 0;
   }
 
+  html,
   body {
     margin: 0;
-    background: black;
+    padding: 0;
+    background: #000;
+    height: 100%;
+    overflow: hidden;
   }
 
   body * {
-    visibility: hidden;
+    visibility: hidden !important;
   }
 
   .print-area,
   .print-area * {
-    visibility: visible;
+    visibility: visible !important;
   }
 
   .print-area {
@@ -94,11 +254,17 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    background: #000;
   }
 
   .print-area img {
     max-height: 100vh;
     width: auto;
+    height: auto;
     object-fit: contain;
+
+    border-radius: 0;
+    display: block;
   }
 }
