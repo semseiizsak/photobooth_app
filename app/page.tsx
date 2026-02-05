@@ -22,6 +22,7 @@ export default function Page() {
   const [stripUrl, setStripUrl] = useState<string | null>(null);
   const [showReview, setShowReview] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
+  const [showCoin, setShowCoin] = useState(false);
 
   const [printCountdown, setPrintCountdown] = useState<number>(5);
 
@@ -78,7 +79,12 @@ export default function Page() {
   async function startCapture() {
     console.log("Green button clicked");
 
-    // Start camera first
+    // Show coin animation first
+    setShowCoin(true);
+    await wait(1200); // Wait for coin animation
+    setShowCoin(false);
+
+    // Start camera
     const cameraOk = await requestCamera();
     if (!cameraOk) {
       console.error("Failed to start camera");
@@ -237,7 +243,7 @@ export default function Page() {
     ctx.rect(x, y, w, h);
     ctx.clip();
 
-    ctx.globalAlpha = 0.6; // Visible but subtle
+    ctx.globalAlpha = 0.25; // Visible but subtle
     ctx.globalCompositeOperation = "screen"; // Ignores black, shows light parts
 
     // Move to center of the photo area
@@ -389,9 +395,12 @@ export default function Page() {
           )}
 
           {/* Green button area */}
-          {phase === "idle" && !cameraActive && (
+          {phase === "idle" && !cameraActive && !showCoin && (
             <div className="green-button-area" onClick={startCapture} />
           )}
+
+          {/* Coin animation */}
+          {showCoin && <div className="coin" />}
         </div>
       )}
 

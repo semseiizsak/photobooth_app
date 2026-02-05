@@ -1,189 +1,493 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Liquid Glass Button – Demo</title>
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    min-height: 100%;
-    font-family: "SF Pro Display Medium","SF Pro","Inter","Helvetica Neue",Arial,sans-serif;
-  }
+<html lang="hu">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>JELENTKEZZ ITT</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #ffffff00;
+        --card: #ffffff;
+        --accent: #000;
+        --muted: #7a8794;
+        --accent-2: #000;
+        --input-border: #c3c3c3;
+        --radius: 8px;
+        --label-size: 13px;
+        --error: #ff4d4d;
+      }
 
-  body {
-    margin: 0;
-    min-height: 100vh;
-    background: url("https://static.wixstatic.com/media/65e3c0_d79c89e6a3dc49278efb5ab85506d666~mv2.png/v1/fill/w_2170,h_1044,al_c,q_95,usm_0.66_1.00_0.01,enc_avif,quality_auto/foodora%20borit%C3%B3-2.png") center / cover no-repeat;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-  }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: "Open Sans", Arial, sans-serif;
+        background: var(--bg);
+        color: var(--accent);
+      }
 
-  .demo-wrap {
-    display: flex;
-    gap: 32px;
-    padding: 40px;
-  }
+      h1 {
+        font-size: 3rem;
+        text-align: center;
+        color: #0da650;
+      }
 
-  .btn-liquid-glass{
-    --h: 128px;
-    --pad-x: 56px;
-    --radius: 100px;
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.2rem;
+        }
+      }
 
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 1.8rem;
+        }
+      }
 
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+      @media (max-width: 480px) {
+        .wrap {
+          padding: 16px;
+        }
+        .control {
+          padding: 4px 8px;
+        }
+        input,
+        textarea,
+        select {
+          padding: 6px 0;
+        }
+      }
 
-    height: var(--h);
-    padding: 0 var(--pad-x);
-    border-radius: var(--radius);
+      .wrap {
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 20px;
+        background: var(--card);
+        border-radius: 14px;
+        box-shadow: 0 8px 30px rgba(10, 20, 40, 0.06);
+        box-sizing: border-box;
+      }
 
-    border: 1px solid rgba(255,255,255,.18);
-    background:
-      linear-gradient(
-        180deg,
-        rgba(255,255,255,0.18) 0%,
-        rgba(255,255,255,0.08) 50%,
-        rgba(255,255,255,0.03) 100%
-      );
-    backdrop-filter: blur(10px) saturate(105%);
-    -webkit-backdrop-filter: blur(10px) saturate(105%);
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        align-items: stretch;
+      }
 
-    color: inherit;
-    text-decoration: none;
-    font-weight: 550;
-    letter-spacing: .2px;
-    font-size: 50px;
-    line-height: 1;
+      .grid > div {
+        display: flex;
+        flex-direction: column;
+      }
 
-    box-shadow:
-      0 12px 30px rgba(0,0,0,.18),
-      inset 0 1px 0 rgba(255,255,255,.22);
+      .grid > div .control {
+        margin-top: auto;
+      }
 
-    cursor: pointer;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
+      .headline {
+        text-transform: uppercase;
+        text-align: center;
+        margin: 12px;
+        margin-bottom: 50px;
+        font-weight: 950;
+        font-size: 32px;
+        line-height: 1.2;
+      }
 
-    transition:
-      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-      border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-      backdrop-filter 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      filter 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-    overflow: hidden;
-    isolation: isolate;
-  }
+      .paragraph {
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 40px;
+        font-weight: 950;
+        font-size: 24px;
+        line-height: 1.2;
+      }
 
-  /* top glass highlight */
-  .btn-liquid-glass::before{
-    content:"";
-    position:absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0) 60%);
-    opacity: .28;
-    pointer-events:none;
-    z-index: 0;
-    transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-  }
+      label.field-label {
+        display: block;
+        font-weight: 700;
+        font-size: var(--label-size);
+        margin-bottom: 8px;
+        color: var(--accent);
+      }
 
-  /* moving “liquid” sheen (position set by JS, works without JS too) */
-  .btn-liquid-glass::after{
-    content:"";
-    position:absolute;
-    left: var(--mx, 50%);
-    top: var(--my, 30%);
-    width: 420px;
-    height: 420px;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle at center,
-      rgba(255,255,255,.35) 0%,
-      rgba(255,255,255,.18) 25%,
-      rgba(255,255,255,0) 60%
-    );
-    filter: blur(14px);
-    opacity: .45;
-    pointer-events:none;
-    z-index: 0;
-    transition: opacity .15s ease;
-  }
+      .control {
+        background: #fff;
+        border-radius: 10px;
+        padding: 5px 10px;
+        border: 1px solid var(--input-border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-  .btn-liquid-glass > *{ position: relative; z-index: 1; }
+      input,
+      textarea,
+      select {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        font-size: 15px;
+        background: transparent;
+        padding: 8px 0;
+        font-family: inherit;
+        appearance: none;
+        min-height: 18px;
+      }
 
-  .btn-liquid-glass:hover{
-    transform: translateY(-2px);
-    border-color: rgba(255,255,255,.22);
-    box-shadow:
-      0 16px 40px rgba(0,0,0,.22),
-      inset 0 1px 0 rgba(255,255,255,.26);
-    backdrop-filter: blur(22px) saturate(110%);
-    -webkit-backdrop-filter: blur(22px) saturate(110%);
-  }
+      textarea {
+        resize: vertical;
+        padding-top: 2px;
+        padding-bottom: 2px;
+      }
 
-  .btn-liquid-glass:active{
-    transform: translateY(0px) scale(.99);
-  }
+      .full {
+        grid-column: 1 / -1;
+      }
 
-  .btn-liquid-glass:focus-visible{
-    outline: none;
-    box-shadow:
-      0 0 0 3px rgba(255,255,255,.18),
-      0 16px 40px rgba(0,0,0,.22),
-      inset 0 1px 0 rgba(255,255,255,.26);
-  }
+      @media (max-width: 720px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
 
-  .btn-liquid-glass[disabled],
-  .btn-liquid-glass.is-disabled{
-    opacity: .55;
-    cursor: not-allowed;
-    transform: none;
-  }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: var(--accent-2);
+        color: #fff;
+        border: 0;
+        padding: 12px 6rem;
+        border-radius: 10px;
+        font-weight: 950;
+        cursor: pointer;
+        font-size: 18px;
+        margin-top: 14px;
+        background-color: #0da650;
+      }
 
-  /* optional: arrow icon slot */
-  .btn-liquid-glass .btn-ico{
-    width: 16px;
-    height: 16px;
-    flex: 0 0 16px;
-    opacity: .9;
-  }
+      .success {
+        display: none;
+        text-align: center;
+        margin-top: 14px;
+        color: var(--accent);
+        font-size: 18px;
+      }
+      .visible {
+        display: block;
+      }
+      .error-border {
+        border: 1px solid var(--error) !important;
+      }
+      .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 24px 32px;
+        box-shadow: 0 8px 30px rgba(10, 20, 40, 0.2);
+        text-align: center;
+        font-weight: 700;
+        font-size: 16px;
+        color: var(--error);
+        z-index: 999;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        opacity: 0;
+        text-transform: uppercase;
+      }
+      .popup.visible {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
 
-  @media (prefers-reduced-motion: reduce){
-    .btn-liquid-glass{ transition: none; }
-    .btn-liquid-glass::after{ transition: none; }
-  }
-</style>
-</head>
-<body>
-  <div class="demo-wrap">
-    <button class="btn-liquid-glass">View our menu</button>
-    <button class="btn-liquid-glass">Let's collaborate</button>
-  </div>
-<script>
-  // Optional: pointer-tracking sheen. Safe to include multiple times.
-  (() => {
-    const sel = '.btn-liquid-glass';
-    const set = (el, e) => {
-      const r = el.getBoundingClientRect();
-      const x = ((e.clientX - r.left) / r.width) * 100;
-      const y = ((e.clientY - r.top) / r.height) * 100;
-      el.style.setProperty('--mx', x + '%');
-      el.style.setProperty('--my', y + '%');
-    };
+      .popup button {
+        margin-top: 16px;
+        background: var(--accent-2);
+        color: #fff;
+        border: 0;
+        padding: 8px 20px;
+        border-radius: var(--radius);
+        cursor: pointer;
+        font-weight: 700;
+      }
 
-    document.querySelectorAll(sel).forEach(el => {
-      el.addEventListener('pointermove', (e) => set(el, e), { passive: true });
-      el.addEventListener('pointerleave', () => {
-        el.style.removeProperty('--mx');
-        el.style.removeProperty('--my');
-      }, { passive: true });
-    });
-  })();
-</script>
-</body>
+      @media (max-width: 480px) {
+        body {
+          padding-left: 0;
+          padding-right: 0;
+        }
+        .wrap {
+          width: 100%;
+          max-width: 100%;
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1 class="headline">JELENTKEZZ ITT</h1>
+      <form id="contactForm" autocomplete="off" novalidate>
+        <input type="hidden" id="sheetName" name="sheetName" value="CLEANER NIGHTSHIFT BUDAPEST" />
+        <input type="hidden" id="recipientEmail" name="recipientEmail" value="hiring@simonsburger.hu" />
+        <input type="hidden" id="submissionId" name="submissionId" value="" />
+
+        <div class="grid">
+          <div>
+            <label class="field-label" for="firstname">KERESZTNÉV *</label>
+            <div class="control">
+              <input id="firstname" name="firstname" type="text" required />
+            </div>
+          </div>
+          <div>
+            <label class="field-label" for="lastname">VEZETÉKNÉV *</label>
+            <div class="control">
+              <input id="lastname" name="lastname" type="text" required />
+            </div>
+          </div>
+          <div>
+            <label class="field-label" for="email">EMAIL *</label>
+            <div class="control">
+              <input id="email" name="email" type="email" required />
+            </div>
+          </div>
+          <div>
+            <label class="field-label" for="phone">TELEFON *</label>
+            <div class="control">
+              <input id="phone" name="phone" type="tel" required />
+            </div>
+          </div>
+          <div>
+            <label class="field-label" for="experience">VAN VENDÉGLÁTÓS TAPASZTALOD? *</label>
+            <div class="control">
+              <select id="experience" name="experience" required>
+                <option value="">Válassz...</option>
+                <option value="yes">Igen</option>
+                <option value="no">Nem</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="field-label" for="birthdate">MIKOR SZÜLETTÉL? *</label>
+            <div class="control">
+              <input id="birthdate" name="birthdate" type="date" required />
+            </div>
+          </div>
+          <div>
+            <label class="field-label" for="student">25 ÉV ALATTI NAPPALI TAGOZATOS DIÁK VAGY? *</label>
+            <div class="control">
+              <select id="student" name="student" required>
+                <option value="">Válassz...</option>
+                <option value="yes">Igen</option>
+                <option value="no">Nem</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="field-label" for="social">INSTAGRAM/FACEBOOK LINK</label>
+            <div class="control">
+              <input id="social" name="social" type="url" placeholder="https://" />
+            </div>
+          </div>
+          <div>
+            <label class="field-label" for="daysPerWeek">HETI HÁNY NAPOT TUDNÁL VÁLLALNI? *</label>
+            <div class="control">
+              <select id="daysPerWeek" name="daysPerWeek" required>
+                <option value="">Válassz...</option>
+                <option value="1">1 nap</option>
+                <option value="2">2 nap</option>
+                <option value="3">3 nap</option>
+                <option value="4">4 nap</option>
+                <option value="5">5 nap</option>
+                <option value="6">6 nap</option>
+                <option value="7">7 nap</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="field-label" for="weekend">HÉTVÉGÉT IS TUDSZ VÁLLALNI? *</label>
+            <div class="control">
+              <select id="weekend" name="weekend" required>
+                <option value="">Válassz...</option>
+                <option value="yes">Igen</option>
+                <option value="no">Nem</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="full">
+            <label class="field-label" for="workHistory">NÉHÁNY MONDATBAN FOGLALD ÖSSZE, HOGY HOL DOLGOZTÁL *</label>
+            <div class="control">
+              <textarea
+                id="workHistory"
+                name="workHistory"
+                rows="6"
+                required
+              ></textarea>
+            </div>
+          </div>
+
+          <div
+            class="full"
+            style="display: flex; flex-direction: column; align-items: center"
+          >
+            <button id="submitBtn" class="btn" type="submit">MEHET</button>
+            <div id="success" class="success">SIKERES JELENTKEZÉS</div>
+          </div>
+        </div>
+
+        <div id="popup" class="popup">
+          <br />
+          Kimaradt kötelező mezők!<br /><br />
+          <button type="button" onclick="closePopup()">OK</button>
+        </div>
+      </form>
+    </div>
+
+    <iframe
+      name="hidden_iframe"
+      id="hidden_iframe"
+      style="display: none"
+      scrolling="no"
+    ></iframe>
+
+    <script>
+      const WEB_APP_URL =
+        "https://script.google.com/macros/s/AKfycbxzkXQFZPXOQJTftaW72-LUHfmCb9Oeo1-dwQ1jTx_uX08izQz4Bnvzp8c30fQK-nsr/exec";
+      const form = document.getElementById("contactForm");
+      const popup = document.getElementById("popup");
+      const msgEl = document.getElementById("success");
+      const submitBtn = document.getElementById("submitBtn");
+
+      function showPopup() {
+        popup.classList.add("visible");
+      }
+      function closePopup() {
+        popup.classList.remove("visible");
+      }
+
+      function highlightRequiredFields() {
+        let valid = true;
+        document.querySelectorAll("[required]").forEach((el) => {
+          const control = el.closest(".control");
+          if (!control) return;
+          if (
+            !el.value ||
+            (typeof el.value === "string" && el.value.trim() === "")
+          ) {
+            control.classList.add("error-border");
+            valid = false;
+          } else {
+            control.classList.remove("error-border");
+          }
+        });
+        if (!valid) showPopup();
+        return valid;
+      }
+
+      function gatherData() {
+        return {
+          submissionId: document.getElementById("submissionId").value.trim(),
+          sheetName: document.getElementById("sheetName").value.trim(),
+          firstname: document.getElementById("firstname").value.trim(),
+          lastname: document.getElementById("lastname").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          phone: document.getElementById("phone").value.trim(),
+          experience: document.getElementById("experience").value,
+          birthdate: document.getElementById("birthdate").value,
+          student: document.getElementById("student").value,
+          social: document.getElementById("social").value.trim(),
+          daysPerWeek: document.getElementById("daysPerWeek").value,
+          weekend: document.getElementById("weekend").value,
+          workHistory: document.getElementById("workHistory").value.trim()
+        };
+      }
+
+      function showLoading() {
+        submitBtn.textContent = "KÜLDÉS...";
+        submitBtn.disabled = true;
+      }
+      function hideLoading() {
+        submitBtn.textContent = "MEHET";
+        submitBtn.disabled = false;
+      }
+      function showSuccess() {
+        msgEl.classList.add("visible");
+        form.reset();
+        hideLoading();
+        setTimeout(() => msgEl.classList.remove("visible"), 3500);
+      }
+
+      function submitViaIframe(data) {
+        const iframe = document.getElementById("hidden_iframe");
+        const tempForm = document.createElement("form");
+        tempForm.action = WEB_APP_URL;
+        tempForm.method = "POST";
+        tempForm.target = iframe.name;
+        tempForm.style.display = "none";
+        Object.keys(data).forEach((k) => {
+          const i = document.createElement("input");
+          i.type = "hidden";
+          i.name = k;
+          i.value = data[k];
+          tempForm.appendChild(i);
+        });
+        document.body.appendChild(tempForm);
+        tempForm.submit();
+        setTimeout(() => {
+          document.body.removeChild(tempForm);
+          showSuccess();
+        }, 1200);
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const submissionEl = document.getElementById("submissionId");
+        if (!submissionEl.value) {
+          submissionEl.value =
+            Date.now() + "-" + Math.random().toString(36).slice(2, 9);
+        }
+
+        if (!highlightRequiredFields()) return;
+
+        const data = gatherData();
+
+        showLoading();
+
+        const qs = new URLSearchParams(data).toString();
+        const fullUrl = WEB_APP_URL + "?" + qs;
+
+        if (fullUrl.length > 2000) {
+          submitViaIframe(data);
+          return;
+        }
+
+        try {
+          const res = await fetch(fullUrl, { method: "GET", mode: "cors" });
+          const r = await res.json();
+          if (r && r.status === "success") {
+            showSuccess();
+          } else {
+            submitViaIframe(data);
+          }
+        } catch (err) {
+          submitViaIframe(data);
+        }
+      });
+    </script>
+  </body>
 </html>

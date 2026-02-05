@@ -3,8 +3,8 @@
   --fg: #000;
 
   /* Frame position within the 5000x5000 image (as percentages) */
-  --frame-top: 29%;
-  --frame-left: 29%;
+  --frame-top: 27.5%;
+  --frame-left: 27.5%;
   --frame-width: 29%;
   --frame-height: 40%;
 
@@ -82,10 +82,9 @@ body {
   width: var(--frame-width);
   height: var(--frame-height);
   overflow: hidden;
-  /* Blurred borders on all sides */
-  box-shadow:
-    inset 0 0 20px 20px rgba(255, 255, 255, 0.9),
-    0 0 20px 20px rgba(255, 255, 255, 0.9);
+  /* White border around the video - doesn't shrink video */
+  border: 15px solid #fff;
+  box-sizing: content-box;
 }
 
 .mirror-area.hidden {
@@ -94,8 +93,7 @@ body {
 }
 
 .mirror-area.visible {
-  opacity: 1;
-}
+  opacity: 1;}
 
 .mirror-video {
   width: 100%;
@@ -111,8 +109,8 @@ body {
 .enter-area {
   position: absolute;
   z-index: 50;
-  top: 38%;
-  left: 50%;
+  top: 65%;
+  left: 67%;
   transform: translateX(-50%);
   width: 18%;
   height: 35%;
@@ -219,6 +217,67 @@ body {
 @keyframes flashAnim {
   0% { opacity: 1; }
   100% { opacity: 0; }
+}
+
+/* =========================================================
+   Coin animation - hand inserting motion (arch)
+   ========================================================= */
+.coin {
+  position: absolute;
+  z-index: 100;
+  width: 4%;
+  aspect-ratio: 1;
+  /* Black and white style */
+  border-radius: 50%;
+  border: 2px solid #000;
+  
+  /* Start position - to the right, will arc into slot */
+  animation: coinInsert 1s ease-out forwards;
+}
+
+.coin::before {
+  content: "";
+  position: absolute;
+  inset: 20%;
+  border-radius: 50%;
+}
+
+@keyframes coinInsert {
+  0% {
+    /* Start from bottom-right, like a hand approaching */
+    top: 62%;
+    left: 85%;
+    transform: rotate(-30deg) scale(1);
+    opacity: 1;
+  }
+  30% {
+    /* Arc upward */
+    top: 42%;
+    left: 74%;
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  60% {
+    /* Peak of the arc, tilting toward slot */
+    top: 40%;
+    left: 71%;
+    transform: rotate(15deg) scale(1);
+    opacity: 1;
+  }
+  85% {
+    /* Moving into the slot */
+    top: 48%;
+    left: 70%;
+    transform: rotate(90deg) scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    /* Inserted into slot */
+    top: 52%;
+    left: 70%;
+    transform: rotate(90deg) scale(0.4);
+    opacity: 0;
+  }
 }
 
 /* =========================================================
@@ -424,9 +483,8 @@ button:active {
    ========================================================= */
 @media (max-width: 600px) {
   .enter-area {
-    top: 35%;
-    width: 25%;
-    height: 30%;
+    top: 65%;
+    left: 67%;
   }
 
   :root {
@@ -434,4 +492,13 @@ button:active {
     --btn-left: 68%;
     --btn-size: 6%;
   }
+
+  .mirror-area.visible {
+    top: 27%;
+    left: 27%;
+
+      border: 7px solid #fff;
+  box-sizing: content-box;
+  }
+
 }
