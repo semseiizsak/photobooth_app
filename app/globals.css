@@ -163,10 +163,10 @@ body {
 .countdown-overlay {
   position: absolute;
   z-index: 50;
-  top: 45%;
-  left: 32%;
+  top: 62%;
+  left: 45%;
   transform: translate(-50%, -50%);
-  font-size: clamp(60px, 12vmin, 150px);
+  font-size: clamp(10px, 12vmin, 150px);
   font-weight: 900;
   color: #fff;
   text-shadow:
@@ -485,6 +485,12 @@ button:active {
   .enter-area {
     top: 65%;
     left: 67%;
+  }
+
+  .enter-text {
+    font-size: 12px;
+    padding: 8px 14px;
+    border-width: 2px;
   }
 
   :root {
