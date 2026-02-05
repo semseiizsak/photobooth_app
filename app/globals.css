@@ -479,6 +479,28 @@ button:active {
 }
 
 /* =========================================================
+   Footer links
+   ========================================================= */
+.footer-links {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  z-index: 60;
+}
+
+.footer-links a {
+  color: #bcbcbc;
+  text-decoration: underline;
+}
+
+/* =========================================================
    Responsive adjustments
    ========================================================= */
 @media (max-width: 600px) {

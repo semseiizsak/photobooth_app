@@ -461,6 +461,12 @@ export default function Page() {
           </div>
         </div>
       )}
+
+      {/* FOOTER LINKS */}
+      <div className="footer-links">
+        <a href="mailto:info@photoautomat.hu">MAIL</a>
+        <a href="https://wa.me/36703361957">WHATSAPP</a>
+      </div>
     </div>
   );
 }
