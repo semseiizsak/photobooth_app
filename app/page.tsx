@@ -23,8 +23,32 @@ export default function Page() {
   const [showReview, setShowReview] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
   const [showCoin, setShowCoin] = useState(false);
+  const [isCapturing, setIsCapturing] = useState(false);
 
   const [printCountdown, setPrintCountdown] = useState<number>(5);
+  const [showStripInSlot, setShowStripInSlot] = useState(false);
+  const [showResultFade, setShowResultFade] = useState(false);
+
+  /* -------------------------------------------------- */
+  /* DEBUG: Press 'D' to jump to arriving scene         */
+  /* -------------------------------------------------- */
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'd' || e.key === 'D') {
+        setStripUrl('/scenes/photostrip (11).jpg');
+        setScene('arriving');
+        setShowStripInSlot(true);
+        console.log('DEBUG: Jumped to arriving scene');
+      }
+      if (e.key === 'r' || e.key === 'R') {
+        reset();
+        console.log('DEBUG: Reset');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   /* -------------------------------------------------- */
   /* Animated background frames                         */
@@ -77,11 +101,15 @@ export default function Page() {
   /* Start capture (green button click)                 */
   /* -------------------------------------------------- */
   async function startCapture() {
+    // Prevent double-clicks
+    if (isCapturing) return;
+    setIsCapturing(true);
+
     console.log("Green button clicked");
 
     // Show coin animation first
     setShowCoin(true);
-    await wait(1200); // Wait for coin animation
+    await wait(1000); // Wait for coin animation
     setShowCoin(false);
 
     // Start camera
@@ -169,15 +197,21 @@ export default function Page() {
     console.log("Building strip...");
     const strip = await buildStrip(shots);
 
-    // Reveal result
+    // Show strip dropping into slot in arriving scene
     setStripUrl(strip);
+    setShowStripInSlot(true);
+    await wait(2000); // Let strip drop animation play
+
+    // Fade to result scene
+    setShowResultFade(true);
     setScene("result");
     setPhase("idle");
+    setIsCapturing(false);
     console.log("Done!");
   }
 
   /* -------------------------------------------------- */
-  /* Capture frame (true grayscale)                     */
+  /* Capture frame (high contrast B&W)                  */
   /* -------------------------------------------------- */
   function capture(): string {
     const video = videoRef.current!;
@@ -193,8 +227,29 @@ export default function Page() {
     const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const d = img.data;
 
+    // Contrast and black point settings
+    const contrast = 1.35; // Slight contrast boost
+    const blackPoint = 5; // Darken shadows
+    const whitePoint = 230; // Brighten highlights
+
     for (let i = 0; i < d.length; i += 4) {
-      const g = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+      // Convert to grayscale
+      let g = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+
+      // Apply contrast curve (S-curve like effect)
+      g = ((g / 255 - 0.5) * contrast + 0.5) * 255;
+
+      // Clamp and adjust black/white points
+      g = Math.max(0, Math.min(255, g));
+
+      // Push darks darker, lights lighter
+      if (g < 128) {
+        g = g * (1 - blackPoint / 255);
+      } else {
+        g = g + (255 - g) * ((255 - whitePoint) / 255);
+      }
+
+      g = Math.max(0, Math.min(255, g));
       d[i] = d[i + 1] = d[i + 2] = g;
     }
 
@@ -340,6 +395,9 @@ export default function Page() {
     setScene("outside");
     setPhotoNumber(0);
     setCameraActive(false);
+    setIsCapturing(false);
+    setShowStripInSlot(false);
+    setShowResultFade(false);
   }
 
   function printStrip() {
@@ -408,14 +466,21 @@ export default function Page() {
       {scene === "arriving" && (
         <div className="scene-wrapper">
           <img className="scene-bg" src="/scenes/arriving-photo.png" alt="" />
-          <div className="arriving-countdown">{printCountdown}</div>
+          {!showStripInSlot && (
+            <div className="arriving-countdown">{printCountdown}</div>
+          )}
+          {showStripInSlot && stripUrl && (
+            <div className="strip-slot">
+              <img src={stripUrl} alt="Your photo strip" />
+            </div>
+          )}
         </div>
       )}
 
       {/* RESULT SCENE */}
       {scene === "result" && stripUrl && (
-        <div className="result-scene">
-          <div className="print-area strip-drop">
+        <div className={`result-scene ${showResultFade ? "fade-in" : ""}`}>
+          <div className="print-area">
             <img src={stripUrl} alt="Your photo strip" />
           </div>
 
@@ -462,11 +527,14 @@ export default function Page() {
         </div>
       )}
 
-      {/* FOOTER LINKS */}
-      <div className="footer-links">
-        <a href="mailto:info@photoautomat.hu">MAIL</a>
-        <a href="https://wa.me/36703361957">WHATSAPP</a>
-      </div>
+      {/* FOOTER LINKS - hide on result scene */}
+      {scene !== "result" && (
+        <div className="footer-links">
+          <a href="mailto:info@photoautomat.hu">MAIL</a>
+          <a href="https://wa.me/36703361957">WHATSAPP</a>
+          <a href="https://maps.app.goo.gl/5J9ko4nX9KEpJ4XW8" target="_blank" rel="noopener noreferrer">VISIT THE REAL ONE</a>
+        </div>
+      )}
     </div>
   );
 }

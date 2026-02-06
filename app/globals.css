@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Benzin';
+  src: url('/fonts/Benzin-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
 :root {
   --bg: #fff;
   --fg: #000;
@@ -29,7 +36,7 @@ body {
   overflow: hidden;
   overscroll-behavior: none;
   touch-action: manipulation;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Benzin', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 * {
@@ -52,11 +59,12 @@ body {
    ========================================================= */
 .scene-wrapper {
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 100vmin;
+  height: 100vmin;
   max-width: 100vmin;
   max-height: 100vmin;
   aspect-ratio: 1 / 1;
+  margin: 0 auto;
 }
 
 /* Scene background images */
@@ -66,7 +74,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  z-index: 10;
+  z-index: 40;
   pointer-events: none;
 }
 
@@ -76,7 +84,7 @@ body {
    ========================================================= */
 .mirror-area {
   position: absolute;
-  z-index: 20;
+  z-index: 90;
   top: var(--frame-top);
   left: var(--frame-left);
   width: var(--frame-width);
@@ -162,11 +170,11 @@ body {
 /* Countdown overlay - large number */
 .countdown-overlay {
   position: absolute;
-  z-index: 50;
-  top: 62%;
+  z-index: 100;
+  top: 65%;
   left: 45%;
   transform: translate(-50%, -50%);
-  font-size: clamp(10px, 12vmin, 150px);
+  font-size: clamp(10px, 6vmin, 75px);
   font-weight: 900;
   color: #fff;
   text-shadow:
@@ -225,57 +233,53 @@ body {
 .coin {
   position: absolute;
   z-index: 100;
-  width: 4%;
+  width: 3%;
   aspect-ratio: 1;
   /* Black and white style */
   border-radius: 50%;
-  border: 2px solid #000;
-  
+  /* background: linear-gradient(135deg, #ddd 0%, #999 50%, #ddd 100%); */
+  border: 2px solid #333;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+
   /* Start position - to the right, will arc into slot */
-  animation: coinInsert 1s ease-out forwards;
+  animation: coinInsert 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .coin::before {
   content: "";
   position: absolute;
-  inset: 20%;
+  inset: 25%;
   border-radius: 50%;
+  border: 1px solid #666;
 }
 
 @keyframes coinInsert {
   0% {
-    /* Start from bottom-right, like a hand approaching */
-    top: 62%;
-    left: 85%;
-    transform: rotate(-30deg) scale(1);
-    opacity: 1;
-  }
-  30% {
-    /* Arc upward */
-    top: 42%;
-    left: 74%;
+    /* Start from right side, hand approaching */
+    top: 55%;
+    left: 80%;
     transform: rotate(0deg) scale(1);
     opacity: 1;
   }
-  60% {
-    /* Peak of the arc, tilting toward slot */
-    top: 40%;
-    left: 71%;
-    transform: rotate(15deg) scale(1);
+  40% {
+    /* Arc up and towards slot */
+    top: 38%;
+    left: 72%;
+    transform: rotate(20deg) scale(1);
     opacity: 1;
   }
-  85% {
-    /* Moving into the slot */
-    top: 48%;
+  70% {
+    /* Align with slot */
+    top: 42%;
     left: 70%;
-    transform: rotate(90deg) scale(0.8);
+    transform: rotate(80deg) scale(0.9);
     opacity: 1;
   }
   100% {
-    /* Inserted into slot */
-    top: 52%;
+    /* Drop into slot */
+    top: 50%;
     left: 70%;
-    transform: rotate(90deg) scale(0.4);
+    transform: rotate(90deg) scale(0.3);
     opacity: 0;
   }
 }
@@ -294,6 +298,41 @@ body {
   color: #000;
 }
 
+/* Strip dropping into slot */
+.strip-slot {
+  position: absolute;
+  z-index: 0;
+  top: 40.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7.5%;
+}
+
+.strip-slot img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #000;
+  animation: stripSlotDrop 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes stripSlotDrop {
+  0% {
+    transform: translateY(-200%);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(2%);
+    rotate: -2deg;
+  }
+  100% {
+    transform: translateY(0);
+    rotate: -6deg;
+  }
+}
+
 /* =========================================================
    RESULT SCENE - Photo strip display
    ========================================================= */
@@ -308,9 +347,24 @@ body {
   gap: 20px;
   padding: 20px;
   background: #fff;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out forwards;
 }
 
-.strip-drop {
+.result-scene.fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.print-area {
   flex: 1;
   display: flex;
   align-items: center;
@@ -318,27 +372,12 @@ body {
   min-height: 0;
 }
 
-.strip-drop img {
+.print-area img {
   max-height: 70vh;
   max-width: 90vw;
   width: auto;
   height: auto;
   border: 3px solid #000;
-  animation: stripDrop 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-@keyframes stripDrop {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  60% {
-    transform: translateY(5%);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(0);
-  }
 }
 
 /* Control buttons */
@@ -492,7 +531,7 @@ button:active {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  z-index: 60;
+  z-index: 150;
 }
 
 .footer-links a {
@@ -504,6 +543,24 @@ button:active {
    Responsive adjustments
    ========================================================= */
 @media (max-width: 600px) {
+  .booth {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .scene-wrapper {
+    width: 100vw;
+    height: 100vw;
+    max-width: 100vw;
+    max-height: 100vw;
+  }
+
+  .footer-links {
+    font-size: 8px;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
   .enter-area {
     top: 65%;
     left: 67%;
@@ -524,9 +581,12 @@ button:active {
   .mirror-area.visible {
     top: 27%;
     left: 27%;
-
-      border: 7px solid #fff;
-  box-sizing: content-box;
+    border: 7px solid #fff;
+    box-sizing: content-box;
   }
 
+  .strip-slot {
+    width: 7%;
+    top: 52%;
+  }
 }
