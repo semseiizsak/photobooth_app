@@ -540,6 +540,93 @@ button:active {
 }
 
 /* =========================================================
+   Credit trademark
+   ========================================================= */
+.credit-mark {
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+  font-size: 8px;
+  color: #ccc;
+  cursor: pointer;
+  z-index: 60;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  text-align: right;
+}
+
+.credit-mark span {
+  display: inline;
+}
+
+.credit-mark:hover {
+  opacity: 1;
+}
+
+@media (max-width: 600px) {
+  .credit-mark {
+    right: 4px;
+    bottom: 4px;
+    font-size: 7px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .credit-mark span {
+    display: block;
+  }
+}
+
+.credit-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.credit-modal {
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 12px;
+  padding: 24px;
+  width: min(85vw, 260px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.credit-modal p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+.credit-links {
+  display: flex;
+  gap: 16px;
+}
+
+.credit-links a {
+  font-size: 12px;
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.credit-links a:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+/* =========================================================
    Responsive adjustments
    ========================================================= */
 @media (max-width: 600px) {
@@ -587,6 +674,6 @@ button:active {
 
   .strip-slot {
     width: 7%;
-    top: 52%;
+    top: 43%;
   }
 }

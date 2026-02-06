@@ -21,6 +21,7 @@ export default function Page() {
   const [photoNumber, setPhotoNumber] = useState<number>(0);
   const [stripUrl, setStripUrl] = useState<string | null>(null);
   const [showReview, setShowReview] = useState(false);
+  const [showCredit, setShowCredit] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
   const [showCoin, setShowCoin] = useState(false);
   const [isCapturing, setIsCapturing] = useState(false);
@@ -533,6 +534,28 @@ export default function Page() {
           <a href="mailto:info@photoautomat.hu">MAIL</a>
           <a href="https://wa.me/36703361957">WHATSAPP</a>
           <a href="https://maps.app.goo.gl/5J9ko4nX9KEpJ4XW8" target="_blank" rel="noopener noreferrer">VISIT THE REAL ONE</a>
+        </div>
+      )}
+
+      {/* CREDIT TRADEMARK */}
+      <div className="credit-mark" onClick={() => setShowCredit(true)}>
+        <span>made by:</span>
+        <span>semsei</span>
+      </div>
+
+      {/* CREDIT POPUP */}
+      {showCredit && (
+        <div className="credit-overlay" onClick={() => setShowCredit(false)}>
+          <div className="credit-modal" onClick={(e) => e.stopPropagation()}>
+            <p>made by semsei izsák<br /> let's connect!</p>
+            <div className="credit-links">
+              <a href="mailto:semseizsak@gmail.com">Email</a>
+              <a href="https://github.com/semseiizsak" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.instagram.com/semseizsak/" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="https://www.linkedin.com/in/izs%C3%A1k-semsei/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </div>
+            <button className="secondary" onClick={() => setShowCredit(false)}>CLOSE</button>
+          </div>
         </div>
       )}
     </div>
