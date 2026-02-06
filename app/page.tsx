@@ -8,6 +8,8 @@ type Scene = "outside" | "inside" | "arriving" | "result";
 
 const OUTSIDE_FRAMES = ["/scenes/outside1.png", "/scenes/outside2.png", "/scenes/outside3.png"];
 const INSIDE_FRAMES = ["/scenes/inside1.png", "/scenes/inside2.png", "/scenes/inside3.png"];
+const ARRIVING_FRAMES = ["/scenes/2.1..png", "/scenes/2.2..png", "/scenes/2.3..png"];
+const ENTER_TRANSITION = ["/scenes/4.3..png", "/scenes/4.2..png", "/scenes/4.1..png", "/scenes/4.1..png"];
 const FRAME_INTERVAL = 150;
 
 export default function Page() {
@@ -29,6 +31,8 @@ export default function Page() {
   const [printCountdown, setPrintCountdown] = useState<number>(5);
   const [showStripInSlot, setShowStripInSlot] = useState(false);
   const [showResultFade, setShowResultFade] = useState(false);
+  const [enterTransition, setEnterTransition] = useState(false);
+  const [enterFrame, setEnterFrame] = useState(0);
 
   /* -------------------------------------------------- */
   /* DEBUG: Press 'D' to jump to arriving scene         */
@@ -55,7 +59,7 @@ export default function Page() {
   /* Animated background frames                         */
   /* -------------------------------------------------- */
   useEffect(() => {
-    if (scene !== "outside" && scene !== "inside") return;
+    if (scene !== "outside" && scene !== "inside" && scene !== "arriving") return;
 
     const interval = setInterval(() => {
       setFrameIndex((prev) => (prev + 1) % 3);
@@ -91,9 +95,18 @@ export default function Page() {
   }
 
   /* -------------------------------------------------- */
-  /* Enter booth (outside -> inside)                    */
+  /* Enter booth (outside -> inside with transition)    */
   /* -------------------------------------------------- */
-  function enterBooth() {
+  async function enterBooth() {
+    setEnterTransition(true);
+
+    // Play transition frames: 4.3 -> 4.2 -> 4.1
+    for (let i = 0; i < ENTER_TRANSITION.length; i++) {
+      setEnterFrame(i);
+      await wait(600);
+    }
+
+    setEnterTransition(false);
     setScene("inside");
     setPhase("idle");
   }
@@ -399,6 +412,8 @@ export default function Page() {
     setIsCapturing(false);
     setShowStripInSlot(false);
     setShowResultFade(false);
+    setEnterTransition(false);
+    setEnterFrame(0);
   }
 
   function printStrip() {
@@ -416,8 +431,15 @@ export default function Page() {
       {/* FLASH OVERLAY */}
       {phase === "flash" && <div className="flash-overlay" />}
 
+      {/* ENTER TRANSITION */}
+      {enterTransition && (
+        <div className="scene-wrapper">
+          <img className="scene-bg" src={ENTER_TRANSITION[enterFrame]} alt="" />
+        </div>
+      )}
+
       {/* OUTSIDE SCENE */}
-      {scene === "outside" && (
+      {scene === "outside" && !enterTransition && (
         <div className="scene-wrapper">
           <img className="scene-bg" src={OUTSIDE_FRAMES[frameIndex]} alt="" />
           <div className="enter-area" onClick={enterBooth}>
@@ -465,8 +487,8 @@ export default function Page() {
 
       {/* ARRIVING SCENE */}
       {scene === "arriving" && (
-        <div className="scene-wrapper">
-          <img className="scene-bg" src="/scenes/arriving-photo.png" alt="" />
+        <div className="scene-wrapper arriving-wrapper">
+          <img className="scene-bg" src={ARRIVING_FRAMES[frameIndex]} alt="" />
           {!showStripInSlot && (
             <div className="arriving-countdown">{printCountdown}</div>
           )}

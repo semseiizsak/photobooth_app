@@ -287,6 +287,10 @@ body {
 /* =========================================================
    ARRIVING SCENE - Photo printing
    ========================================================= */
+.arriving-wrapper {
+  background: #fff;
+}
+
 .arriving-countdown {
   position: absolute;
   z-index: 50;
@@ -302,7 +306,7 @@ body {
 .strip-slot {
   position: absolute;
   z-index: 0;
-  top: 40.5%;
+  top: 39.5%;
   left: 50%;
   transform: translateX(-50%);
   width: 7.5%;
