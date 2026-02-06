@@ -9,7 +9,7 @@ type Scene = "outside" | "inside" | "arriving" | "result";
 const OUTSIDE_FRAMES = ["/scenes/outside1.png", "/scenes/outside2.png", "/scenes/outside3.png"];
 const INSIDE_FRAMES = ["/scenes/inside1.png", "/scenes/inside2.png", "/scenes/inside3.png"];
 const ARRIVING_FRAMES = ["/scenes/2.1..png", "/scenes/2.2..png", "/scenes/2.3..png"];
-const ENTER_TRANSITION = ["/scenes/4.3..png", "/scenes/4.2..png", "/scenes/4.1..png", "/scenes/4.1..png"];
+const ENTER_TRANSITION = ["/scenes/outside1.png", "/scenes/4.3..png", "/scenes/4.2..png", "/scenes/4.1..png", "/scenes/4.1..png"];
 const FRAME_INTERVAL = 150;
 
 export default function Page() {
@@ -103,7 +103,7 @@ export default function Page() {
     // Play transition frames: 4.3 -> 4.2 -> 4.1
     for (let i = 0; i < ENTER_TRANSITION.length; i++) {
       setEnterFrame(i);
-      await wait(600);
+      await wait(400);
     }
 
     setEnterTransition(false);
@@ -225,7 +225,7 @@ export default function Page() {
   }
 
   /* -------------------------------------------------- */
-  /* Capture frame (high contrast B&W)                  */
+  /* Capture frame (high contrast B&W with motion blur) */
   /* -------------------------------------------------- */
   function capture(): string {
     const video = videoRef.current!;
@@ -236,15 +236,18 @@ export default function Page() {
     canvas.height = video.videoHeight;
 
     const ctx = canvas.getContext("2d")!;
+
+    // Draw main image
     ctx.drawImage(video, 0, 0);
 
+    // Apply grayscale and contrast
     const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const d = img.data;
 
     // Contrast and black point settings
-    const contrast = 1.35; // Slight contrast boost
-    const blackPoint = 5; // Darken shadows
-    const whitePoint = 230; // Brighten highlights
+    const contrast = 1.35;
+    const blackPoint = 5;
+    const whitePoint = 230;
 
     for (let i = 0; i < d.length; i += 4) {
       // Convert to grayscale
@@ -268,6 +271,12 @@ export default function Page() {
     }
 
     ctx.putImageData(img, 0, 0);
+
+    // Add motion blur ghost layer
+    ctx.globalAlpha = 0.20;
+    ctx.drawImage(canvas, 2, 1);
+    ctx.globalAlpha = 1.0;
+
     return canvas.toDataURL("image/jpeg", 0.95);
   }
 
@@ -275,7 +284,6 @@ export default function Page() {
   /* Overlay textures for vintage effect                */
   /* -------------------------------------------------- */
   const OVERLAYS = [
-    "/scenes/overlay-grunge.jpg",
     "/scenes/overlay-slighttexture.jpg",
     "/scenes/overlay-supergraini.jpg"
   ];
@@ -445,6 +453,7 @@ export default function Page() {
           <div className="enter-area" onClick={enterBooth}>
             <span className="enter-text">ENTER</span>
           </div>
+          <img className="enter-arrow" src="/scenes/image.png" alt="" />
         </div>
       )}
 

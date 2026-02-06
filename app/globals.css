@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'Benzin';
-  src: url('/fonts/Benzin-Bold.ttf') format('truetype');
+  font-family: "Benzin";
+  src: url("/fonts/Benzin-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }
@@ -36,7 +36,12 @@ body {
   overflow: hidden;
   overscroll-behavior: none;
   touch-action: manipulation;
-  font-family: 'Benzin', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Benzin",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 * {
@@ -52,6 +57,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 /* =========================================================
@@ -101,7 +107,8 @@ body {
 }
 
 .mirror-area.visible {
-  opacity: 1;}
+  opacity: 1;
+}
 
 .mirror-video {
   width: 100%;
@@ -117,8 +124,8 @@ body {
 .enter-area {
   position: absolute;
   z-index: 50;
-  top: 65%;
-  left: 67%;
+  top: 45%;
+  left: 5%;
   transform: translateX(-50%);
   width: 18%;
   height: 35%;
@@ -146,6 +153,23 @@ body {
 
 .enter-area:active .enter-text {
   transform: scale(0.98);
+}
+
+.enter-arrow {
+  position: absolute;
+  top: 61%;
+  left: 12%;
+  width: 20%;
+  height: auto;
+  z-index: 51;
+  pointer-events: none;
+  transform: rotate(45deg);
+}
+
+@media (max-width: 600px) {
+  .enter-arrow {
+    display: none;
+  }
 }
 
 /* =========================================================
@@ -186,8 +210,13 @@ body {
 }
 
 @keyframes countPulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50% { transform: translate(-50%, -50%) scale(1.1); }
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
 }
 
 /* Green button clickable area */
@@ -223,8 +252,12 @@ body {
 }
 
 @keyframes flashAnim {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 /* =========================================================
@@ -239,7 +272,7 @@ body {
   border-radius: 50%;
   /* background: linear-gradient(135deg, #ddd 0%, #999 50%, #ddd 100%); */
   border: 2px solid #333;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
   /* Start position - to the right, will arc into slot */
   animation: coinInsert 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
@@ -642,8 +675,10 @@ button:active {
   .scene-wrapper {
     width: 100vw;
     height: 100vw;
-    max-width: 100vw;
-    max-height: 100vw;
+    max-width: none;
+    max-height: none;
+    margin: 0 auto;
+    margin-right: 20px;
   }
 
   .footer-links {
@@ -653,8 +688,9 @@ button:active {
   }
 
   .enter-area {
-    top: 65%;
-    left: 67%;
+    top: -25%;
+    left: 54%;
+
   }
 
   .enter-text {
@@ -679,5 +715,9 @@ button:active {
   .strip-slot {
     width: 7%;
     top: 43%;
+  }
+
+  .countdown-overlay {
+    text-shadow: none;
   }
 }
