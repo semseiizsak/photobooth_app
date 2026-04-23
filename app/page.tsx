@@ -443,6 +443,8 @@ export default function Page() {
       {enterTransition && (
         <div className="scene-wrapper">
           <img className="scene-bg" src={ENTER_TRANSITION[enterFrame]} alt="" />
+          <div className="price-cover price-cover-outside" />
+          <div className="price-cover1 price-cover-outside1" />
         </div>
       )}
 
@@ -450,6 +452,8 @@ export default function Page() {
       {scene === "outside" && !enterTransition && (
         <div className="scene-wrapper">
           <img className="scene-bg" src={OUTSIDE_FRAMES[frameIndex]} alt="" />
+          <div className="price-cover price-cover-outside" />
+          <div className="price-cover1 price-cover-outside1" />
           <div className="enter-area" onClick={enterBooth}>
             <span className="enter-text">ENTER</span>
           </div>
@@ -473,6 +477,9 @@ export default function Page() {
 
           {/* Scene image - on top with transparent frame */}
           <img className="scene-bg" src={INSIDE_FRAMES[frameIndex]} alt="" />
+
+          {/* Cover price/payment info */}
+          <div className="price-cover price-cover-inside" />
 
           {/* Photo counter */}
           {showVideo && phase === "countdown" && photoNumber > 0 && (
@@ -512,29 +519,57 @@ export default function Page() {
       {/* RESULT SCENE */}
       {scene === "result" && stripUrl && (
         <div className={`result-scene ${showResultFade ? "fade-in" : ""}`}>
+          
+
           <div className="print-area">
             <img src={stripUrl} alt="Your photo strip" />
           </div>
 
           <div className="controls">
-            <a
-              href={stripUrl}
-              download="photostrip.jpg"
-              onClick={() => setShowReview(true)}
-            >
-              <button>DOWNLOAD</button>
-            </a>
+            <div className="controls-restart">
+              <button className="icon-btn" onClick={reset} title="Restart">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 4v6h6" />
+                  <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                </svg>
+              </button>
+            </div>
 
-            <button
-              onClick={() => {
-                printStrip();
-                setShowReview(true);
-              }}
-            >
-              PRINT
-            </button>
+            <div className="controls-actions">
+              <a
+                href={stripUrl}
+                download="photostrip.jpg"
+                onClick={() => setShowReview(true)}
+              >
+                <button>DOWNLOAD</button>
+              </a>
 
-            <button onClick={reset}>RESTART</button>
+              <button
+                onClick={() => {
+                  printStrip();
+                  setShowReview(true);
+                }}
+              >
+                PRINT
+              </button>
+
+              <button
+                onClick={async () => {
+                  if (navigator.share && stripUrl) {
+                    try {
+                      const res = await fetch(stripUrl);
+                      const blob = await res.blob();
+                      const file = new File([blob], "photostrip.jpg", { type: "image/jpeg" });
+                      await navigator.share({ files: [file], title: "My Photostrip" });
+                    } catch (e) {
+                      console.log("Share cancelled or failed", e);
+                    }
+                  }
+                }}
+              >
+                SHARE
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -559,14 +594,12 @@ export default function Page() {
         </div>
       )}
 
-      {/* FOOTER LINKS - hide on result scene */}
-      {scene !== "result" && (
-        <div className="footer-links">
-          <a href="mailto:info@photoautomat.hu">MAIL</a>
-          <a href="https://wa.me/36703361957">WHATSAPP</a>
-          <a href="https://maps.app.goo.gl/5J9ko4nX9KEpJ4XW8" target="_blank" rel="noopener noreferrer">VISIT THE REAL ONE</a>
-        </div>
-      )}
+      {/* FOOTER LINKS - visible on all scenes */}
+      <div className="footer-links">
+        <a href="mailto:info@photoautomat.hu">MAIL</a>
+        <a href="https://wa.me/36703361957">WHATSAPP</a>
+        <a href="/locations" target="_blank" rel="noopener noreferrer">VISIT THE REAL ONE</a>
+      </div>
 
       {/* CREDIT TRADEMARK */}
       <div className="credit-mark" onClick={() => setShowCredit(true)}>

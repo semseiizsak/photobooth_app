@@ -1,0 +1,252 @@
+/* =========================================================
+   Locations page — reset (inherits font from root but
+   re-enables scroll since the booth blocks it globally)
+   ========================================================= */
+.loc-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #fff;
+  color: #000;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* =========================================================
+   Header
+   ========================================================= */
+.loc-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  border-bottom: 2px solid #000;
+  flex-shrink: 0;
+}
+
+.loc-back {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #000;
+  border: 1.5px solid #000;
+  padding: 5px 12px;
+  border-radius: 6px;
+  transition: background 0.12s, color 0.12s;
+}
+
+.loc-back:hover {
+  background: #000;
+  color: #fff;
+}
+
+.loc-title {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.loc-city {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+/* =========================================================
+   Body — sidebar + map
+   ========================================================= */
+.loc-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* =========================================================
+   Sidebar / card list
+   ========================================================= */
+.loc-sidebar {
+  width: 360px;
+  min-width: 300px;
+  max-width: 400px;
+  flex-shrink: 0;
+  border-right: 2px solid #000;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.loc-count {
+  margin: 0;
+  padding: 12px 20px 8px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #999;
+  border-bottom: 1px solid #eee;
+}
+
+/* =========================================================
+   Location card
+   ========================================================= */
+.loc-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1.5px solid #eee;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.loc-card:hover {
+  background: #f5f5f5;
+}
+
+.loc-card--active {
+  background: #000 !important;
+  color: #fff;
+}
+
+/* Thumbnail */
+.loc-thumb {
+  flex-shrink: 0;
+  width: 80px;
+  height: 60px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1.5px solid #000;
+}
+
+.loc-card--active .loc-thumb {
+  border-color: #fff;
+}
+
+.loc-thumb svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Info block */
+.loc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.loc-name {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+.loc-addr {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: #555;
+  line-height: 1.4;
+}
+
+.loc-card--active .loc-addr {
+  color: #bbb;
+}
+
+.loc-phone {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #444;
+}
+
+.loc-card--active .loc-phone {
+  color: #ccc;
+}
+
+.loc-btn {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 5px 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1.5px solid #000;
+  border-radius: 5px;
+  color: #000;
+  background: #fff;
+  transition: background 0.12s, color 0.12s;
+  align-self: flex-start;
+}
+
+.loc-btn:hover {
+  background: #000;
+  color: #fff;
+}
+
+.loc-card--active .loc-btn {
+  border-color: #fff;
+  background: transparent;
+  color: #fff;
+}
+
+.loc-card--active .loc-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* =========================================================
+   Map
+   ========================================================= */
+.loc-map-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Leaflet override — ensure map tiles are crisp */
+.loc-map-wrap .leaflet-container {
+  width: 100%;
+  height: 100%;
+  font-family: system-ui, sans-serif;
+}
+
+/* =========================================================
+   Mobile — stack vertically
+   ========================================================= */
+@media (max-width: 700px) {
+  .loc-body {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .loc-sidebar {
+    width: 100%;
+    max-width: none;
+    border-right: none;
+    border-bottom: 2px solid #000;
+    overflow-y: visible;
+    max-height: none;
+    flex-shrink: 0;
+  }
+
+  .loc-map-wrap {
+    height: 56vw;
+    min-height: 260px;
+    flex: none;
+    flex-shrink: 0;
+  }
+}

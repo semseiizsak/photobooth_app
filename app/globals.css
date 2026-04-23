@@ -1,10 +1,3 @@
-@font-face {
-  font-family: "Benzin";
-  src: url("/fonts/Benzin-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-}
-
 :root {
   --bg: #fff;
   --fg: #000;
@@ -36,12 +29,7 @@ body {
   overflow: hidden;
   overscroll-behavior: none;
   touch-action: manipulation;
-  font-family:
-    "Benzin",
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 * {
@@ -170,6 +158,55 @@ body {
   .enter-arrow {
     display: none;
   }
+}
+
+/* =========================================================
+   Price cover overlays - white boxes to hide price info
+   ========================================================= */
+.price-cover {
+  position: absolute;
+  background: #fff;
+  z-index: 45;
+  pointer-events: none;
+}
+
+/* Outside scene: covers the "PHOTO AUTOMAT 4... 2.5€" price box */
+.price-cover-outside {
+  top: 50.1%;
+  left: 64%;
+  width: 6%;
+  height: 3%;
+}
+
+/* Inside scene: covers the "PHOTOS START AUTOMATICALLY AFTER PAYMENT" box */
+.price-cover-inside {
+  top: 75%;
+  left: 57%;
+  width: 22%;
+  height: 11%;
+}
+
+.price-cover1 {
+  position: absolute;
+  background: #fff;
+  z-index: 45;
+  pointer-events: none;
+}
+
+/* Outside scene: covers the "PHOTO AUTOMAT 4... 2.5€" price box */
+.price-cover-outside1 {
+  top: 55.6%;
+  left: 71.7%;
+  width: 8.5%;
+  height: 9%;
+}
+
+/* Inside scene: covers the "PHOTOS START AUTOMATICALLY AFTER PAYMENT" box */
+.price-cover-inside1 {
+  top: 75%;
+  left: 57%;
+  width: 22%;
+  height: 11%;
 }
 
 /* =========================================================
@@ -392,6 +429,32 @@ body {
   animation: fadeIn 0.8s ease-out forwards;
 }
 
+/* Top bar with restart icon */
+.result-top-bar {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 110;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.15s ease;
+}
+
+.icon-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #000;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -420,13 +483,26 @@ body {
 /* Control buttons */
 .controls {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 52px; /* clears the footer */
+}
+
+.controls-restart {
+  display: flex;
+  justify-content: center;
+}
+
+.controls-actions {
+  display: flex;
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
 }
 
-.controls a {
+.controls-actions a {
   text-decoration: none;
 }
 
@@ -568,7 +644,7 @@ button:active {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  z-index: 150;
+  z-index: 200;
 }
 
 .footer-links a {
