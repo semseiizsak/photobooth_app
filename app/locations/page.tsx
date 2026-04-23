@@ -15,6 +15,7 @@ const LOCATIONS: Location[] = [
     lat: 47.4964,
     lng: 19.0724,
     mapsUrl: "https://maps.app.goo.gl/Uqx3xf58NCErMfkv5",
+    thumb: "https://lh3.googleusercontent.com/p/AF1QipOenMst9PQpTOK7Kb68o4y9xwOjqVAcFjprs96L=s1360-w1360-h1020-rw",
   },
   {
     id: 2,
@@ -23,6 +24,7 @@ const LOCATIONS: Location[] = [
     lat: 47.4997,
     lng: 19.0676,
     mapsUrl: "https://maps.app.goo.gl/LDMAjMzZyPKsa6j5A",
+    thumb: "https://lh3.googleusercontent.com/p/AF1QipOEpBaKGXgx3awJcoNoVlxxhFbs3mAxtQ5xspL5=s1360-w1360-h1020-rw",
   },
   {
     id: 3,
@@ -31,6 +33,7 @@ const LOCATIONS: Location[] = [
     lat: 47.5001,
     lng: 19.0667,
     mapsUrl: "https://maps.app.goo.gl/nAfZZdWQjCkC7UCg8",
+    thumb: "https://lh3.googleusercontent.com/p/AF1QipPDhEjo473ibm6g0jnsAIqLtijB4ZbyplT-LPCD=s1360-w1360-h1020-rw",
   },
 ];
 
@@ -59,22 +62,8 @@ export default function LocationsPage() {
               className={`loc-card ${activeId === loc.id ? "loc-card--active" : ""}`}
               onClick={() => setActiveId(activeId === loc.id ? null : loc.id)}
             >
-              {/* Thumbnail placeholder */}
               <div className="loc-thumb">
-                <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="80" height="60" fill="#111" />
-                  {/* Booth outline */}
-                  <rect x="28" y="8" width="24" height="44" rx="2" stroke="#fff" strokeWidth="1.5" fill="none" />
-                  {/* Screen */}
-                  <rect x="32" y="13" width="16" height="18" rx="1" fill="#333" stroke="#fff" strokeWidth="1" />
-                  {/* Slot */}
-                  <rect x="33" y="37" width="14" height="3" rx="1" fill="#444" stroke="#aaa" strokeWidth="0.8" />
-                  {/* Button */}
-                  <circle cx="40" cy="46" r="3" fill="#fff" />
-                  {/* Curtain sides */}
-                  <rect x="10" y="14" width="16" height="34" rx="1" fill="#222" stroke="#555" strokeWidth="1" />
-                  <rect x="54" y="14" width="16" height="34" rx="1" fill="#222" stroke="#555" strokeWidth="1" />
-                </svg>
+                <img src={loc.thumb} alt={loc.name} />
               </div>
 
               <div className="loc-info">
