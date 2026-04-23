@@ -166,14 +166,19 @@
 
 .loc-phone {
   margin: 0;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: #444;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #000;
+  text-decoration: none;
+}
+
+.loc-phone:hover {
+  text-decoration: underline;
 }
 
 .loc-card--active .loc-phone {
-  color: #ccc;
+  color: #fff;
 }
 
 .loc-btn {

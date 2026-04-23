@@ -69,7 +69,7 @@ export default function LocationsPage() {
               <div className="loc-info">
                 <p className="loc-name">{loc.name}</p>
                 <p className="loc-addr">{loc.address}</p>
-                <p className="loc-phone">{PHONE}</p>
+                <a href={`tel:${PHONE}`} className="loc-phone" onClick={(e) => e.stopPropagation()}>{PHONE}</a>
                 <a
                   href={loc.mapsUrl}
                   target="_blank"
