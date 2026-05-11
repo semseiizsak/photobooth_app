@@ -62,7 +62,7 @@ export default function MapComponent({ locations, activeId, onMarkerClick }: Map
     if (!containerRef.current || mapRef.current) return;
 
     const map = L.map(containerRef.current, {
-      center: [47.4983, 19.069],
+      center: [47.4956, 19.0624],
       zoom: 15,
       zoomControl: true,
     });
