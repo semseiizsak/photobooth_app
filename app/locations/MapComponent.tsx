@@ -10,8 +10,9 @@ export interface Location {
   address: string;
   lat: number;
   lng: number;
-  mapsUrl: string;
+  mapsUrl: string | null;
   thumb: string;
+  soon?: boolean;
 }
 
 interface MapComponentProps {
@@ -61,7 +62,7 @@ export default function MapComponent({ locations, activeId, onMarkerClick }: Map
     if (!containerRef.current || mapRef.current) return;
 
     const map = L.map(containerRef.current, {
-      center: [47.4995, 19.069],
+      center: [47.4983, 19.069],
       zoom: 15,
       zoomControl: true,
     });
@@ -78,10 +79,13 @@ export default function MapComponent({ locations, activeId, onMarkerClick }: Map
           `<div style="font-family:system-ui;font-weight:700;font-size:13px;line-height:1.5">
             <div style="text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">${loc.name.replace("PHOTOAUTOMAT ", "")}</div>
             <div style="font-weight:400;font-size:12px;color:#555">${loc.address}</div>
-            <a href="${loc.mapsUrl}" target="_blank" rel="noopener noreferrer"
-              style="display:inline-block;margin-top:8px;padding:4px 10px;background:#000;color:#fff;text-decoration:none;font-size:11px;border-radius:4px;letter-spacing:0.08em">
-              MAPS ↗
-            </a>
+            ${loc.mapsUrl
+              ? `<a href="${loc.mapsUrl}" target="_blank" rel="noopener noreferrer"
+                  style="display:inline-block;margin-top:8px;padding:4px 10px;background:#000;color:#fff;text-decoration:none;font-size:11px;border-radius:4px;letter-spacing:0.08em">
+                  MAPS ↗
+                </a>`
+              : `<span style="display:inline-block;margin-top:8px;padding:4px 10px;background:#888;color:#fff;font-size:11px;border-radius:4px;letter-spacing:0.08em">COMING SOON</span>`
+            }
           </div>`,
           { maxWidth: 200 }
         );
