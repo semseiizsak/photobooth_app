@@ -77,10 +77,7 @@ export default function LocationsPage() {
               </div>
 
               <div className="loc-info">
-                <div className="loc-name-row">
-                  <p className="loc-name">{loc.name}</p>
-                  {loc.soon && <span className="loc-soon-badge">SOON</span>}
-                </div>
+                <p className="loc-name">{loc.name}</p>
                 <p className="loc-addr">{loc.address}</p>
                 <a href={`tel:${PHONE}`} className="loc-phone" onClick={(e) => e.stopPropagation()}>{PHONE}</a>
                 {loc.mapsUrl ? (
@@ -94,7 +91,7 @@ export default function LocationsPage() {
                     GET DIRECTIONS ↗
                   </a>
                 ) : (
-                  <span className="loc-btn loc-btn--soon">COMING SOON</span>
+                  <span className="loc-btn loc-btn--disabled">GET DIRECTIONS ↗</span>
                 )}
               </div>
             </div>
