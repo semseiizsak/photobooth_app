@@ -83,7 +83,7 @@ export default function MapComponent({ locations, activeId, onMarkerClick }: Map
                   style="display:inline-block;margin-top:8px;padding:4px 10px;background:#000;color:#fff;text-decoration:none;font-size:11px;border-radius:4px;letter-spacing:0.08em">
                   MAPS ↗
                 </a>`
-              : `<span style="display:inline-block;margin-top:8px;padding:4px 10px;background:#888;color:#fff;font-size:11px;border-radius:4px;letter-spacing:0.08em">COMING SOON</span>`
+              : `<span style="display:inline-block;margin-top:8px;padding:4px 10px;background:#ccc;color:#fff;font-size:11px;border-radius:4px;letter-spacing:0.08em;cursor:default">GET DIRECTIONS ↗</span>`
             }
           </div>`,
           { maxWidth: 200 }
