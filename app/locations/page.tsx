@@ -41,9 +41,17 @@ const LOCATIONS: Location[] = [
     address: "Holló u. 10, Budapest 1075",
     lat: 47.498767,
     lng: 19.059878,
-    mapsUrl: null,
+    mapsUrl: "https://maps.app.goo.gl/TrPis6joKAmsQX5C8",
     thumb: "/gozsdu.jpg",
-    soon: true,
+  },
+  {
+    id: 5,
+    name: "PHOTOAUTOMAT Dob",
+    address: "Dob u. 11, Budapest 1074",
+    lat: 47.498950,
+    lng: 19.064200,
+    mapsUrl: null,
+    thumb: null,
   },
 ];
 
@@ -73,7 +81,9 @@ export default function LocationsPage() {
               onClick={() => setActiveId(activeId === loc.id ? null : loc.id)}
             >
               <div className="loc-thumb">
-                <img src={loc.thumb} alt={loc.name} />
+                {loc.thumb
+                  ? <img src={loc.thumb} alt={loc.name} />
+                  : <div className="loc-thumb-placeholder" />}
               </div>
 
               <div className="loc-info">

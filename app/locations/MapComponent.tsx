@@ -11,8 +11,7 @@ export interface Location {
   lat: number;
   lng: number;
   mapsUrl: string | null;
-  thumb: string;
-  soon?: boolean;
+  thumb: string | null;
 }
 
 interface MapComponentProps {
