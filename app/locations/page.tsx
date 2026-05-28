@@ -51,7 +51,7 @@ const LOCATIONS: Location[] = [
     lat: 47.498950,
     lng: 19.064200,
     mapsUrl: null,
-    thumb: null,
+    thumb: "/dob.jpg",
   },
 ];
 
