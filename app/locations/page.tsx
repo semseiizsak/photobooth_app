@@ -50,7 +50,7 @@ const LOCATIONS: Location[] = [
     address: "Dob u. 11, Budapest 1074",
     lat: 47.4972391,
     lng: 19.0605164,
-    mapsUrl: null,
+    mapsUrl: "https://maps.app.goo.gl/ZT4rTaGo6RYxuYqn8",
     thumb: "/dob.jpg",
   },
 ];
