@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import "./admin.css";
 
-type Status = "idle" | "saving" | "saved" | "error";
+type Status = "idle" | "saving" | "saved" | "deploying" | "error";
 
 export default function AdminPage() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -39,8 +39,9 @@ export default function AdminPage() {
       body: JSON.stringify({ username, password, url }),
     });
     if (res.ok) {
-      setStatus("saved");
-      setTimeout(() => setStatus("idle"), 2500);
+      const data = await res.json();
+      setStatus(data.deploying ? "deploying" : "saved");
+      if (!data.deploying) setTimeout(() => setStatus("idle"), 2500);
     } else {
       setStatus("error");
     }
@@ -96,8 +97,9 @@ export default function AdminPage() {
           type="submit"
           disabled={status === "saving"}
         >
-          {status === "saving" ? "SAVING..." : status === "saved" ? "SAVED ✓" : "SAVE"}
+          {status === "saving" ? "SAVING..." : status === "saved" ? "SAVED ✓" : status === "deploying" ? "SAVED ✓" : "SAVE"}
         </button>
+        {status === "deploying" && <p className="adm-hint" style={{color:"#888"}}>Deploying… live in ~1 min.</p>}
         {status === "error" && <p className="adm-error">Failed to save. Try again.</p>}
         <a className="adm-preview" href="/review" target="_blank" rel="noopener noreferrer">
           Preview /review page ↗
