@@ -1,0 +1,72 @@
+html, body { overflow: auto !important; }
+
+.rv-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  padding: 24px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.rv-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 380px;
+  width: 100%;
+  gap: 16px;
+}
+
+.rv-brand {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #aaa;
+}
+
+.rv-heading {
+  margin: 0;
+  font-size: clamp(28px, 7vw, 42px);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: #000;
+}
+
+.rv-sub {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: #555;
+  line-height: 1.6;
+}
+
+.rv-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 16px 36px;
+  background: #000;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.rv-btn:hover {
+  background: #222;
+}
+
+.rv-empty {
+  margin: 0;
+  font-size: 13px;
+  color: #bbb;
+  letter-spacing: 0.08em;
+}
