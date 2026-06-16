@@ -59,8 +59,8 @@ const LOCATIONS: Location[] = [
     address: "Nyugati pályaudvar, Budapest 1065",
     lat: 47.5105087,
     lng: 19.0572163,
-    mapsUrl: null,
-    thumb: null,
+    mapsUrl: "https://share.google/KYb7fizGDxkXxKlvU",
+    thumb: "/nyugati.jpg",
   },
 ];
 
