@@ -1,1 +1,1 @@
-export const REVIEW_URL = "https://www.google.com/maps/place/Citadel/@47.4873856,19.0580483,14z/data=!4m6!3m5!1s0x4741dc491e961c5b:0xe49186a2f42ccda9!8m2!3d47.4870199!4d19.0456981!16s%2Fg%2F11dx9gg7d5?entry=ttu&g_ep=EgoyMDI2MDUyNy4wIKXMDSoASAFQAw%3D%3D";
+export const REVIEW_URL = "https://g.page/r/CcCCZfEhahVNEAE/review";
