@@ -53,6 +53,15 @@ const LOCATIONS: Location[] = [
     mapsUrl: "https://maps.app.goo.gl/ZT4rTaGo6RYxuYqn8",
     thumb: "/dob.jpg",
   },
+  {
+    id: 6,
+    name: "PHOTOAUTOMAT Nyugati",
+    address: "Nyugati pályaudvar, Budapest 1065",
+    lat: 47.5105087,
+    lng: 19.0572163,
+    mapsUrl: null,
+    thumb: null,
+  },
 ];
 
 const PHONE = "06703361957";
