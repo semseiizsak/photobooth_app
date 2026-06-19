@@ -55,6 +55,15 @@ const LOCATIONS: Location[] = [
   },
   {
     id: 6,
+    name: "PHOTOAUTOMAT Westend",
+    address: "Váci út 1-3, Budapest 1062",
+    lat: 47.5132499,
+    lng: 19.0589765,
+    mapsUrl: null,
+    thumb: "/westend.jpg",
+  },
+  {
+    id: 7,
     name: "PHOTOAUTOMAT Nyugati",
     address: "Nyugati pályaudvar, Budapest 1065",
     lat: 47.5105087,
