@@ -100,7 +100,7 @@ export default function LocationsPage() {
             >
               <div className="loc-thumb">
                 {loc.thumb
-                  ? <img src={loc.thumb} alt={loc.name} />
+                  ? <img src={loc.thumb} alt={loc.name} loading="lazy" />
                   : <div className="loc-thumb-placeholder" />}
               </div>
 

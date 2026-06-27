@@ -280,14 +280,6 @@ export default function Page() {
     return canvas.toDataURL("image/jpeg", 0.95);
   }
 
-  /* -------------------------------------------------- */
-  /* Overlay textures for vintage effect                */
-  /* -------------------------------------------------- */
-  const OVERLAYS = [
-    "/scenes/overlay-slighttexture.jpg",
-    "/scenes/overlay-supergraini.jpg"
-  ];
-
   async function loadImage(src: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -297,42 +289,32 @@ export default function Page() {
     });
   }
 
-  function applyOverlay(
+  function applyGrainOverlay(
     ctx: CanvasRenderingContext2D,
-    overlay: HTMLImageElement,
     x: number,
     y: number,
     w: number,
     h: number
   ) {
-    // Random rotation between -5 and 5 degrees
-    const rotation = (Math.random() - 0.5) * 10 * (Math.PI / 180);
-    // Random offset for position (up to 10% shift)
-    const offsetX = (Math.random() - 0.5) * w * 0.2;
-    const offsetY = (Math.random() - 0.5) * h * 0.2;
-    // Random scale between 1.0 and 1.3
-    const scale = 1 + Math.random() * 0.3;
+    const grain = document.createElement("canvas");
+    grain.width = w;
+    grain.height = h;
+    const gctx = grain.getContext("2d")!;
+    const imageData = gctx.createImageData(w, h);
+    const d = imageData.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const v = Math.random() * 255;
+      d[i] = v; d[i + 1] = v; d[i + 2] = v; d[i + 3] = 255;
+    }
+    gctx.putImageData(imageData, 0, 0);
 
     ctx.save();
-
-    // Clip to photo area only - keeps black frame clean
     ctx.beginPath();
     ctx.rect(x, y, w, h);
     ctx.clip();
-
-    ctx.globalAlpha = 0.25; // Visible but subtle
-    ctx.globalCompositeOperation = "screen"; // Ignores black, shows light parts
-
-    // Move to center of the photo area
-    ctx.translate(x + w / 2 + offsetX, y + h / 2 + offsetY);
-    ctx.rotate(rotation);
-    ctx.scale(scale, scale);
-
-    // Draw centered
-    const drawW = w * 1.2;
-    const drawH = h * 1.2;
-    ctx.drawImage(overlay, -drawW / 2, -drawH / 2, drawW, drawH);
-
+    ctx.globalAlpha = 0.18;
+    ctx.globalCompositeOperation = "screen";
+    ctx.drawImage(grain, x, y, w, h);
     ctx.restore();
   }
 
@@ -357,27 +339,13 @@ export default function Page() {
     ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, width, height);
 
-    // Load a random overlay
-    const overlayIndex = Math.floor(Math.random() * OVERLAYS.length);
-    let overlay: HTMLImageElement | null = null;
-    try {
-      overlay = await loadImage(OVERLAYS[overlayIndex]);
-    } catch (e) {
-      console.warn("Failed to load overlay", e);
-    }
-
     for (let i = 0; i < images.length; i++) {
       const img = await loadImage(images[i]);
       const photoX = margin;
       const photoY = margin + i * (imgH + margin);
 
-      // Draw the photo
       drawImageCover(ctx, img, photoX, photoY, imgW, imgH);
-
-      // Apply random overlay to each photo
-      if (overlay) {
-        applyOverlay(ctx, overlay, photoX, photoY, imgW, imgH);
-      }
+      applyGrainOverlay(ctx, photoX, photoY, imgW, imgH);
     }
 
     return canvas.toDataURL("image/jpeg", 0.95);
