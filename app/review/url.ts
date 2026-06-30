@@ -1,1 +1,1 @@
-export const REVIEW_URL = "https://g.page/r/CSokKyDJnc2tEBM/review";
+export const REVIEW_URL = "https://g.page/r/Cf5mOZ3VfIdqEAE/review";
