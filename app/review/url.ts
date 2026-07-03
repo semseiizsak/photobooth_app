@@ -1,1 +1,1 @@
-export const REVIEW_URL = "https://maps.app.goo.gl/ffDupUMzosVokqLb6?g_st=ic";
+export const REVIEW_URL = "https://maps.app.goo.gl/EGNgdoMSamoXqoU59?g_st=ic";
