@@ -59,8 +59,17 @@ const LOCATIONS: Location[] = [
     address: "Váci út 1-3, Budapest 1062",
     lat: 47.5132499,
     lng: 19.0589765,
-    mapsUrl: null,
+    mapsUrl: "https://maps.app.goo.gl/SKwTzrZ4y1aFaCSH6",
     thumb: "/westend.jpg",
+  },
+  {
+    id: 8,
+    name: "PHOTOAUTOMAT Király",
+    address: "Király utca 5, Budapest 1075",
+    lat: 47.4984087,
+    lng: 19.0569661,
+    mapsUrl: null,
+    thumb: "/kiraly.jpg",
   },
   {
     id: 7,
