@@ -1,1 +1,1 @@
-export const REVIEW_URL = "https://maps.app.goo.gl/28vXEqb2tzGxysuEA?g_st=ic";
+export const REVIEW_URL = "https://maps.google.com/?q=Budapest,%20Kir%C3%A1ly%20u.%205,%201075&ftid=0x4741ddb027956577:0xc8fc8af1ad6e321f&entry=gps&shh=CAE&lucs=,94297699,100795625,94231188,94280568,47071704,100809209,94218641,94282134,100813469,94286869,100822499&g_st=ic";
