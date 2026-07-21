@@ -68,7 +68,7 @@ const LOCATIONS: Location[] = [
     address: "Király utca 5, Budapest 1075",
     lat: 47.4984087,
     lng: 19.0569661,
-    mapsUrl: null,
+    mapsUrl: "https://share.google/9yAx90IOXIK7x0I6O",
     thumb: "/kiraly.jpg",
   },
   {
