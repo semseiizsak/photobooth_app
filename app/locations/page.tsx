@@ -80,6 +80,15 @@ const LOCATIONS: Location[] = [
     mapsUrl: "https://share.google/KYb7fizGDxkXxKlvU",
     thumb: "/nyugati.jpg",
   },
+  {
+    id: 9,
+    name: "PHOTOAUTOMAT Madách",
+    address: "Madách Imre tér, Budapest 1075",
+    lat: 47.4973323,
+    lng: 19.0569798,
+    mapsUrl: null,
+    thumb: "/madach.jpg",
+  },
 ];
 
 const PHONE = "06703361957";
