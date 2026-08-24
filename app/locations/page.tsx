@@ -86,7 +86,7 @@ const LOCATIONS: Location[] = [
     address: "Madách Imre tér, Budapest 1075",
     lat: 47.4973323,
     lng: 19.0569798,
-    mapsUrl: null,
+    mapsUrl: "https://maps.app.goo.gl/44nbK5CibdmsFgoJA",
     thumb: "/madach.jpg",
   },
 ];
