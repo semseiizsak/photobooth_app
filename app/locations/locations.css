@@ -188,6 +188,19 @@
   color: #fff;
 }
 
+.loc-phone-note {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #999;
+  margin-left: 4px;
+}
+
+.loc-card--active .loc-phone-note {
+  color: #777;
+}
+
 .loc-btn {
   display: inline-block;
   margin-top: 6px;

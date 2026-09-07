@@ -125,7 +125,9 @@ export default function LocationsPage() {
               <div className="loc-info">
                 <p className="loc-name">{loc.name}</p>
                 <p className="loc-addr">{loc.address}</p>
-                <a href={`tel:${PHONE}`} className="loc-phone" onClick={(e) => e.stopPropagation()}>{PHONE}</a>
+                <a href={`tel:${PHONE}`} className="loc-phone" onClick={(e) => e.stopPropagation()}>
+                  {PHONE} <span className="loc-phone-note">ONLY WHATSAPP</span>
+                </a>
                 {loc.mapsUrl ? (
                   <a
                     href={loc.mapsUrl}
