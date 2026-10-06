@@ -5,6 +5,7 @@ import {
 } from "@/lib/pb";
 import { Spark } from "@/lib/spark";
 import AutoRefresh from "./refresh";
+import { createBooth } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -105,6 +106,18 @@ export default async function Fleet() {
           })}
         </div>
       )}
+
+      <div className="section"><h2>Add a booth</h2>
+        <span className="label">then open it and generate a pairing code</span></div>
+      <div className="panel">
+        <form className="inline" action={createBooth}>
+          <div className="field"><span className="label">Name</span>
+            <input name="name" placeholder="CORVIN" style={{ width: 180 }} required /></div>
+          <div className="field"><span className="label">Location</span>
+            <input name="location" placeholder="Budapest 1082" style={{ width: 200 }} /></div>
+          <button>Create booth</button>
+        </form>
+      </div>
     </main>
   );
 }

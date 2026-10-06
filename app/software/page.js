@@ -45,6 +45,7 @@ export default function Software() {
           <nav>
             <a href="#features">Features</a>
             <a href="#hardware">Hardware</a>
+            <a href="/docs">Docs</a>
             <a href="#pilot">Pilot program</a>
           </nav>
         </header>

@@ -4,7 +4,7 @@ import {
 } from "@/lib/pb";
 import { BarChart } from "@/lib/spark";
 import AutoRefresh from "../../refresh";
-import { sendCommand, saveRemoteConfig } from "./actions";
+import { sendCommand, saveRemoteConfig, generatePairingCode, uploadOverlay, removeOverlay } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +17,7 @@ export default async function Booth({ params }) {
   if (!booth) return <div className="empty">Booth not found</div>;
 
   const since24h = new Date(Date.now() - 86400_000).toISOString();
-  const [{ data: events }, { data: revenue }, { data: beats }, { data: pending }] = await Promise.all([
+  const [{ data: events }, { data: revenue }, { data: beats }, { data: pending }, { data: paircode }] = await Promise.all([
     sb.from("pb_events").select("*").eq("booth_id", booth.id)
       .order("occurred_at", { ascending: false }).limit(120),
     sb.from("pb_daily_revenue").select("*").eq("booth_id", booth.id)
@@ -26,6 +26,8 @@ export default async function Booth({ params }) {
       .gte("created_at", since24h).order("created_at").limit(1440),
     sb.from("pb_commands").select("*").eq("booth_id", booth.id)
       .eq("status", "pending"),
+    sb.from("pb_pairing_codes").select("*").eq("booth_id", booth.id)
+      .is("used_at", null).gte("expires_at", new Date().toISOString()).maybeSingle(),
   ]);
 
   const st = boothStatus(booth);
@@ -64,6 +66,52 @@ export default async function Booth({ params }) {
           <div className="v">{hb.disk_free_mb != null ? `${(hb.disk_free_mb / 1024).toFixed(1)} GB` : "—"}</div></div>
       </div>
 
+      <div className="section"><h2>Setup &amp; pairing</h2>
+        <span className="label">one-time — pairs a fresh install to this booth</span></div>
+      <div className="panel">
+        <div className="panel-grid">
+          <div>
+            <div className="label" style={{ marginBottom: 10 }}>Pairing code</div>
+            {paircode ? (
+              <>
+                <div className="keybox" style={{ fontSize: 26, letterSpacing: "0.3em", textAlign: "center" }}>
+                  {paircode.code}
+                </div>
+                <div className="label">
+                  plan: {paircode.plan} · expires {fmtTime(paircode.expires_at)} — type it on the
+                  booth&apos;s first-run screen
+                </div>
+              </>
+            ) : (
+              <form className="inline" action={generatePairingCode.bind(null, booth.id)}>
+                <div className="field"><span className="label">License plan</span>
+                  <select name="plan" defaultValue="pro">
+                    <option value="pro">PRO</option>
+                    <option value="trial">TRIAL (30 days)</option>
+                    <option value="event_pass">EVENT PASS (24h)</option>
+                  </select></div>
+                <button>Generate code</button>
+              </form>
+            )}
+          </div>
+          <div>
+            <div className="label" style={{ marginBottom: 10 }}>Print overlay / template (PNG, print size, transparent where photos show)</div>
+            <form className="inline" action={uploadOverlay.bind(null, booth.id)}>
+              <input type="file" name="overlay" accept="image/png" style={{ border: "1px solid #000", padding: 8 }} />
+              <button>Push to booth</button>
+            </form>
+            {rc.overlay_ver ? (
+              <form action={removeOverlay.bind(null, booth.id)} style={{ marginTop: 10 }}>
+                <span className="label">active overlay v{rc.overlay_ver} · </span>
+                <button className="ghost">Remove overlay</button>
+              </form>
+            ) : (
+              <div className="label" style={{ marginTop: 10 }}>no overlay — booth prints the standard layout</div>
+            )}
+          </div>
+        </div>
+      </div>
+
       <div className="section"><h2>Remote control</h2>
         <span className="label">{(pending || []).length > 0 ? `${pending.length} command(s) queued — delivered on next heartbeat` : ""}</span>
       </div>
@@ -85,6 +133,15 @@ export default async function Booth({ params }) {
                 <input name="countdown" type="number" defaultValue={rc["shooting.countdown_seconds"] ?? 5} style={{ width: 80 }} /></div>
               <div className="field"><span className="label">Err auto-reset (s)</span>
                 <input name="auto_reset" type="number" defaultValue={rc["error.printer_auto_reset_seconds"] ?? 300} style={{ width: 90 }} /></div>
+              <div className="field"><span className="label">Print scale</span>
+                <input name="p_scale" type="number" step="0.005" min="0.8" max="1.2"
+                       defaultValue={rc["printer.scale"] ?? 1.0} style={{ width: 80 }} /></div>
+              <div className="field"><span className="label">Offset X (px)</span>
+                <input name="p_dx" type="number" min="-200" max="200"
+                       defaultValue={rc["printer.offset_x_px"] ?? 0} style={{ width: 80 }} /></div>
+              <div className="field"><span className="label">Offset Y (px)</span>
+                <input name="p_dy" type="number" min="-200" max="200"
+                       defaultValue={rc["printer.offset_y_px"] ?? 0} style={{ width: 80 }} /></div>
               <button>Push</button>
             </form>
           </div>
