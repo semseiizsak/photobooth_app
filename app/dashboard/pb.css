@@ -1,0 +1,99 @@
+/* PHOTOAUTOMAT fleet dashboard — photoautomat.hu design language.
+   Every selector is scoped under .pbd so nothing leaks into the public
+   site's styles. Status dots are the only color. */
+
+.pbd {
+  --pbd-bg: #fff;
+  --pbd-fg: #000;
+  --pbd-grey-2: #666;
+  --pbd-grey-3: #bcbcbc;
+  --pbd-grey-4: #e5e5e5;
+  --pbd-sans: var(--font-geist-sans, system-ui, sans-serif);
+  --pbd-mono: var(--font-geist-mono, ui-monospace, Menlo, Consolas, monospace);
+
+  background: var(--pbd-bg);
+  color: var(--pbd-fg);
+  font-family: var(--pbd-sans);
+  font-size: 14px;
+  min-height: 100vh;
+}
+
+.pbd * { box-sizing: border-box; }
+.pbd a { color: inherit; text-decoration: none; }
+
+.pbd .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; }
+
+.pbd header.site {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 28px 0 20px; border-bottom: 1px solid var(--pbd-fg);
+  margin-bottom: 32px; flex-wrap: wrap; gap: 12px;
+}
+.pbd header.site h1 {
+  font-size: 15px; font-weight: 600; margin: 0;
+  text-transform: uppercase; letter-spacing: 0.15em;
+}
+.pbd header.site nav { display: flex; gap: 24px; }
+.pbd header.site nav a {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--pbd-grey-2);
+}
+.pbd header.site nav a:hover { color: var(--pbd-fg); }
+
+.pbd .label {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--pbd-grey-2);
+}
+.pbd .mono { font-family: var(--pbd-mono); }
+.pbd .big  { font-family: var(--pbd-mono); font-size: 28px; font-weight: 500; }
+
+.pbd .grid {
+  display: grid; gap: 1px; background: var(--pbd-fg);
+  border: 1px solid var(--pbd-fg);
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+.pbd .card {
+  background: var(--pbd-bg); padding: 20px;
+  display: flex; flex-direction: column; gap: 10px; min-height: 160px;
+}
+.pbd .card:hover { background: var(--pbd-grey-4); }
+.pbd .card .name {
+  font-size: 13px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  display: flex; align-items: center; gap: 8px;
+}
+.pbd .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; display: inline-block; }
+.pbd .card .row { display: flex; justify-content: space-between; align-items: baseline; }
+
+.pbd table { width: 100%; border-collapse: collapse; }
+.pbd th {
+  text-align: left; font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.12em; color: var(--pbd-grey-2);
+  padding: 8px 12px 8px 0; border-bottom: 1px solid var(--pbd-fg);
+}
+.pbd td {
+  padding: 10px 12px 10px 0; border-bottom: 1px solid var(--pbd-grey-4);
+  font-family: var(--pbd-mono); font-size: 12.5px; vertical-align: top;
+}
+.pbd td.sans { font-family: var(--pbd-sans); }
+.pbd tr:hover td { background: #fafafa; }
+
+.pbd .sev { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+            padding: 2px 6px; border: 1px solid currentColor; }
+.pbd .sev.error   { color: #d62828; }
+.pbd .sev.warning { color: #e6a700; }
+.pbd .sev.info    { color: var(--pbd-grey-2); }
+
+.pbd pre.logtail {
+  font-family: var(--pbd-mono); font-size: 11px; line-height: 1.5;
+  background: var(--pbd-fg); color: var(--pbd-grey-3);
+  padding: 16px; overflow-x: auto; max-height: 320px;
+}
+
+.pbd .section { margin: 40px 0 16px; }
+.pbd .section h2 {
+  font-size: 12px; margin: 0;
+  text-transform: uppercase; letter-spacing: 0.15em;
+}
+.pbd .bar { background: var(--pbd-fg); height: 10px; }
+.pbd .empty { color: var(--pbd-grey-3); padding: 40px 0; text-transform: uppercase;
+              letter-spacing: 0.12em; font-size: 11px; }

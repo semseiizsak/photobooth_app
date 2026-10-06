@@ -1,3 +1,7 @@
+> **NOTE:** Canonical source now lives in the private monorepo
+> `semseiizsak/photobooth-dslr-software` under `web/`. This repo mirrors it
+> for Vercel deployment until the project is re-linked.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
