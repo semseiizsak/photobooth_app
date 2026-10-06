@@ -600,6 +600,7 @@ export default function Page() {
         <a href="https://wa.me/36703361957">WHATSAPP</a>
         <a href="/locations" target="_blank" rel="noopener noreferrer">VISIT THE REAL ONE</a>
         <a href="mailto:franchise@photoautomat.hu">FRANCHISE</a>
+        <a href="/software">SOFTWARE</a>
       </div>
 
       {/* CREDIT TRADEMARK */}

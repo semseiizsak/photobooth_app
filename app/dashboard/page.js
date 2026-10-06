@@ -1,36 +1,54 @@
 import Link from "next/link";
-import { db, boothStatus, STATUS_COLOR } from "@/lib/pb";
+import {
+  db, boothStatus, STATUS_COLOR, STATUS_LABEL, BOOTH_PHOTOS,
+  fmtFt, timeAgo, todayBudapest, daysBack, seriesFor,
+} from "@/lib/pb";
+import { Spark } from "@/lib/spark";
+import AutoRefresh from "./refresh";
 
 export const dynamic = "force-dynamic";
 
-function todayBudapest() {
-  return new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Budapest" });
-}
-
 export default async function Fleet() {
   const sb = db();
-  const [{ data: booths }, { data: revenue }] = await Promise.all([
+  const since24h = new Date(Date.now() - 86400_000).toISOString();
+  const [{ data: booths }, { data: rev7 }, { data: errs }] = await Promise.all([
     sb.from("pb_booths").select("*").order("name"),
-    sb.from("pb_daily_revenue").select("*").eq("day", todayBudapest()),
+    sb.from("pb_daily_revenue").select("*").gte("day", daysBack(7)),
+    sb.from("pb_events").select("booth_id,type,severity,data,occurred_at")
+      .in("severity", ["error", "warning"]).gte("occurred_at", since24h)
+      .order("occurred_at", { ascending: false }),
   ]);
 
-  const revByBooth = Object.fromEntries(
-    (revenue || []).map((r) => [r.booth_id, r])
-  );
   const list = booths || [];
-  const totalToday = (revenue || []).reduce((s, r) => s + r.revenue_huf, 0);
+  const today = todayBudapest();
+  const todayRows = (rev7 || []).filter((r) => r.day === today);
+  const totalToday = todayRows.reduce((s, r) => s + r.revenue_huf, 0);
+  const sessionsToday = todayRows.reduce((s, r) => s + r.sessions, 0);
   const online = list.filter((b) => boothStatus(b) !== "offline").length;
+  const lastErr = {};
+  for (const e of errs || []) if (!lastErr[e.booth_id]) lastErr[e.booth_id] = e;
 
   return (
     <main>
-      <div className="section" style={{ marginTop: 0, display: "flex", gap: 48 }}>
-        <div>
+      <AutoRefresh />
+      <div className="stats">
+        <div className="stat">
           <div className="label">Booths online</div>
           <div className="big">{online} / {list.length}</div>
         </div>
-        <div>
+        <div className="stat">
           <div className="label">Revenue today</div>
-          <div className="big">Ft {totalToday.toLocaleString("hu-HU")}</div>
+          <div className="big">{fmtFt(totalToday)}</div>
+        </div>
+        <div className="stat">
+          <div className="label">Sessions today</div>
+          <div className="big">{sessionsToday}</div>
+        </div>
+        <div className="stat">
+          <div className="label">Errors · 24h</div>
+          <div className="big" style={{ color: (errs || []).some(e => e.severity === "error") ? "#d62828" : undefined }}>
+            {(errs || []).length}
+          </div>
         </div>
       </div>
 
@@ -41,29 +59,46 @@ export default async function Fleet() {
           {list.map((b) => {
             const st = boothStatus(b);
             const hb = b.last_heartbeat || {};
-            const rev = revByBooth[b.id];
+            const rev = todayRows.find((r) => r.booth_id === b.id);
+            const photo = BOOTH_PHOTOS[b.kabin_id];
+            const err = lastErr[b.id];
+            const spark = seriesFor(rev7, b.id, 7);
             return (
               <Link key={b.id} href={`/dashboard/booth/${b.id}`} className="card">
-                <div className="name">
-                  <span className="dot" style={{ background: STATUS_COLOR[st] }} />
-                  {b.name || b.kabin_id}
+                <div className="photo">
+                  {photo
+                    ? <img src={photo} alt="" />
+                    : <div className="mono-letter">{(b.name || "?")[0]}</div>}
+                  <div className="overlay">
+                    <span className="dot" style={{ background: STATUS_COLOR[st] }} />
+                    {b.name || b.kabin_id}
+                    <span className="loc">{b.location}</span>
+                  </div>
                 </div>
-                <div className="label">{b.location}</div>
-                <div className="row">
-                  <span className="label">Today</span>
-                  <span className="mono">
-                    Ft {(rev?.revenue_huf || 0).toLocaleString("hu-HU")} · {rev?.sessions || 0}×
-                  </span>
-                </div>
-                <div className="row">
-                  <span className="label">State</span>
-                  <span className="mono">{st === "offline" ? "OFFLINE" : hb.state || "—"}</span>
-                </div>
-                <div className="row">
-                  <span className="label">Printer</span>
-                  <span className="mono">
-                    {hb.printer ? (hb.printer.ok ? "OK" : (hb.printer.issues || []).join(", ")) : "—"}
-                  </span>
+                <div className="body">
+                  <div className="row">
+                    <span className="badge" style={{ color: STATUS_COLOR[st] }}>{STATUS_LABEL[st]}</span>
+                    <span className="label">{st === "offline" ? `last seen ${timeAgo(b.last_seen_at)}` : hb.state || ""}</span>
+                  </div>
+                  <div className="row">
+                    <span className="label">Today</span>
+                    <span className="mono">{fmtFt(rev?.revenue_huf)} · {rev?.sessions || 0}×</span>
+                  </div>
+                  <div className="row">
+                    <span className="label">Printer</span>
+                    <span className="mono" style={{ color: hb.printer && hb.printer.ok === false ? "#d62828" : undefined }}>
+                      {hb.printer ? (hb.printer.ok ? "OK" : (hb.printer.issues || []).join(", ").toUpperCase()) : "—"}
+                    </span>
+                  </div>
+                  <div className="row">
+                    <span className="label">7 days</span>
+                    <Spark data={spark} />
+                  </div>
+                  {err && (
+                    <div className="err" title={err.data?.reason || err.type}>
+                      ⚠ {timeAgo(err.occurred_at)} — {err.type}{err.data?.reason ? `: ${err.data.reason}` : ""}
+                    </div>
+                  )}
                 </div>
               </Link>
             );

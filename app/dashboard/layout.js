@@ -18,6 +18,8 @@ export default function DashboardLayout({ children }) {
             <Link href="/dashboard">Fleet</Link>
             <Link href="/dashboard/errors">Errors</Link>
             <Link href="/dashboard/revenue">Revenue</Link>
+            <Link href="/dashboard/licenses">Licenses</Link>
+            <Link href="/dashboard/orgs">Partners</Link>
           </nav>
         </header>
         {children}
