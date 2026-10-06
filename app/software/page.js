@@ -39,7 +39,7 @@ export default function Software() {
           <nav>
             <a href="#features">Features</a>
             <a href="#pricing">Pricing</a>
-            <a href="mailto:software@photoautomat.hu">Contact</a>
+            <a href="mailto:info@photoautomat.hu">Contact</a>
           </nav>
         </header>
 
@@ -51,7 +51,7 @@ export default function Software() {
             operators who want machines that earn while they sleep.
           </p>
           <div className="actions" style={{ marginTop: 36 }}>
-            <a className="btn" href="mailto:software@photoautomat.hu?subject=PHOTOAUTOMAT software trial">Request a trial</a>
+            <a className="btn" href="mailto:info@photoautomat.hu?subject=PHOTOAUTOMAT software trial">Request a trial</a>
             <a className="btn" style={{ background: "transparent", color: "#000" }} href="/locations">See it running</a>
           </div>
         </section>
@@ -93,7 +93,7 @@ export default function Software() {
 
         <footer style={{ marginTop: 80, paddingTop: 24, borderTop: "1px solid #000" }}>
           <span className="label">
-            PHOTOAUTOMAT · BUDAPEST · <a href="mailto:software@photoautomat.hu">SOFTWARE@PHOTOAUTOMAT.HU</a>
+            PHOTOAUTOMAT · BUDAPEST · <a href="mailto:info@photoautomat.hu">INFO@PHOTOAUTOMAT.HU</a>
           </span>
         </footer>
       </div>
