@@ -17,12 +17,14 @@ export default async function StripPage({ params }) {
     { timeZone: "Europe/Budapest", year: "numeric", month: "long", day: "numeric" }) : null;
 
   const S = {
-    page: { minHeight: "100vh", background: "#fff", color: "#000",
-      fontFamily: "var(--font-geist-sans, system-ui, sans-serif)",
+    // height+overflow: the site's global CSS locks body scrolling, so this
+    // page scrolls itself; fontWeight resets the global *{font-weight:700}.
+    page: { height: "100vh", overflowY: "auto", background: "#fff", color: "#000",
+      fontFamily: "var(--font-geist-sans, system-ui, sans-serif)", fontWeight: 400,
       display: "flex", flexDirection: "column", alignItems: "center",
       padding: "40px 20px 60px" },
     h1: { fontSize: 15, fontWeight: 600, letterSpacing: "0.2em", margin: "0 0 6px" },
-    sub: { fontSize: 10, letterSpacing: "0.14em", color: "#666",
+    sub: { fontSize: 10, letterSpacing: "0.14em", color: "#666", fontWeight: 400,
       textTransform: "uppercase", marginBottom: 36 },
     img: { maxWidth: "min(420px, 92vw)", border: "1px solid #000",
       boxShadow: "8px 8px 0 #000" },
@@ -30,8 +32,8 @@ export default async function StripPage({ params }) {
       padding: "14px 32px", fontSize: 11, fontWeight: 600, letterSpacing: "0.15em",
       textTransform: "uppercase", textDecoration: "none" },
     foot: { marginTop: 48, fontSize: 10, letterSpacing: "0.12em", color: "#bcbcbc",
-      textTransform: "uppercase", textAlign: "center", lineHeight: 2 },
-    a: { color: "#666", textDecoration: "none" },
+      fontWeight: 400, textTransform: "uppercase", textAlign: "center", lineHeight: 2 },
+    a: { color: "#666", textDecoration: "none", fontWeight: 400 },
   };
 
   return (

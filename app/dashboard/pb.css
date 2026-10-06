@@ -15,10 +15,17 @@
   color: var(--pbd-fg);
   font-family: var(--pbd-sans);
   font-size: 14px;
-  min-height: 100vh;
+
+  /* The public homepage locks document scrolling (html,body overflow:hidden)
+     for its booth animation, so .pbd pages scroll themselves. */
+  height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.pbd * { box-sizing: border-box; }
+/* The homepage also sets *{font-weight:700} globally — reset it here and let
+   the explicit 600s below re-assert themselves (they have higher specificity). */
+.pbd, .pbd * { box-sizing: border-box; font-weight: 400; }
 .pbd a { color: inherit; text-decoration: none; }
 
 .pbd .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px 80px; }
@@ -128,7 +135,7 @@
 
 .pbd .section { margin: 36px 0 14px; display: flex; align-items: baseline; gap: 16px; }
 .pbd .section h2 {
-  font-size: 12px; margin: 0;
+  font-size: 12px; margin: 0; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.15em;
 }
 .pbd .section .label { margin-left: auto; }
