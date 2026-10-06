@@ -25,5 +25,9 @@ export async function GET(req) {
   const cutoff = new Date(Date.now() - 14 * 86400_000).toISOString();
   await sb.from("pb_heartbeats").delete().lt("created_at", cutoff);
 
+  // Lapse timed licenses (trial / event_pass) that ran out
+  await sb.from("pb_licenses").update({ status: "lapsed" })
+    .eq("status", "active").lt("expires_at", now);
+
   return NextResponse.json({ ok: true, strips_deleted: (expired || []).length });
 }

@@ -40,7 +40,7 @@ export default async function Licenses() {
         <div className="empty">No licenses issued yet</div>
       ) : (
         <table>
-          <thead><tr><th>Key</th><th>Plan</th><th>Status</th><th>Machine</th><th>Email</th><th>Last validated</th><th></th></tr></thead>
+          <thead><tr><th>Key</th><th>Plan</th><th>Status</th><th>Machine</th><th>Email</th><th>Expires</th><th>Last validated</th><th></th></tr></thead>
           <tbody>
             {lics.map((l) => (
               <tr key={l.id}>
@@ -49,6 +49,7 @@ export default async function Licenses() {
                 <td><span className="badge" style={{ color: STATUS_C[l.status] || "#666" }}>{l.status}</span></td>
                 <td title={l.machine_id || ""}>{l.machine_id ? `${l.machine_id.slice(0, 10)}…` : "—"}</td>
                 <td className="sans">{l.email || "—"}</td>
+                <td>{l.expires_at ? fmtTime(l.expires_at) : "—"}</td>
                 <td>{l.last_validated ? fmtTime(l.last_validated) : "never"}</td>
                 <td>
                   <div className="actions">

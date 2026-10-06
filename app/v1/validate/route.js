@@ -17,6 +17,10 @@ export async function POST(req) {
 
   if (!lic || (lic.machine_id && lic.machine_id !== machine_id))
     return NextResponse.json({ error: "License is not valid for this machine." }, { status: 403 });
+  if (lic.expires_at && new Date(lic.expires_at) < new Date()) {
+    await sb.from("pb_licenses").update({ status: "lapsed" }).eq("id", lic.id);
+    return NextResponse.json({ error: "This license has expired. Renew to keep using the booth software." }, { status: 403 });
+  }
   if (lic.status !== "active")
     return NextResponse.json({ error: lic.status === "lapsed"
       ? "Subscription lapsed. Renew to keep using the booth software."
