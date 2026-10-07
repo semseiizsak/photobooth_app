@@ -4,7 +4,7 @@ import {
 } from "@/lib/pb";
 import { BarChart } from "@/lib/spark";
 import AutoRefresh from "../../refresh";
-import { sendCommand, saveRemoteConfig, generatePairingCode, uploadOverlay, removeOverlay } from "./actions";
+import { sendCommand, saveRemoteConfig, generatePairingCode, uploadOverlay, removeOverlay, markPaperReloaded } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +29,12 @@ export default async function Booth({ params }) {
     sb.from("pb_pairing_codes").select("*").eq("booth_id", booth.id)
       .is("used_at", null).gte("expires_at", new Date().toISOString()).maybeSingle(),
   ]);
+  const { data: paperRow } = await sb.from("pb_paper_used")
+    .select("used").eq("booth_id", booth.id).single();
+  const paperUsed = paperRow?.used ?? 0;
+  const paperCap = booth.paper_capacity || 700;
+  const paperLeft = Math.max(0, paperCap - paperUsed);
+  const paperPct = Math.round((paperLeft / paperCap) * 100);
 
   const st = boothStatus(booth);
   const hb = booth.last_heartbeat || {};
@@ -64,6 +70,22 @@ export default async function Booth({ params }) {
           <div className="v">{hb.uptime_s != null ? `${Math.floor(hb.uptime_s / 3600)}h ${Math.floor((hb.uptime_s % 3600) / 60)}m` : "—"}</div></div>
         <div><div className="label">Disk free</div>
           <div className="v">{hb.disk_free_mb != null ? `${(hb.disk_free_mb / 1024).toFixed(1)} GB` : "—"}</div></div>
+        <div><div className="label">Paper</div>
+          <div className={`v ${booth.paper_loaded_at && paperPct <= 10 ? "bad" : ""}`}>
+            {booth.paper_loaded_at
+              ? `~${paperLeft} left · ${paperPct}%`
+              : "not tracked yet"}</div></div>
+      </div>
+
+      <div className="panel" style={{ marginTop: 16 }}>
+        <form className="inline" action={markPaperReloaded.bind(null, booth.id)}>
+          <div className="field"><span className="label">Roll capacity (sheets)</span>
+            <input name="capacity" type="number" defaultValue={paperCap} min={50} max={2000} style={{ width: 90 }} /></div>
+          <button className="ghost">Paper reloaded</button>
+          <span className="label">
+            press after every media change — counts prints since, emails you at 10%
+          </span>
+        </form>
       </div>
 
       <div className="section"><h2>Setup &amp; pairing</h2>

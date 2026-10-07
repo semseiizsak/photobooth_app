@@ -14,7 +14,7 @@ export const metadata = {
 const FEATURES = [
   ["UNATTENDED BY DESIGN", "Built for 24/7 coin-op kiosks, not events. Crash screens, auto-recovery, self-healing payment — proven on the Budapest fleet."],
   ["CARD PAYMENTS", "Native Nayax VPOS integration over MDB (QIBIXX). Auth-first tap: customer taps, booth shoots, money settles only when the print is in their hand."],
-  ["LIVE FLEET DASHBOARD", "Every booth on one page from your phone: online status, printer paper/jam/offline flags, state, disk, uptime. 60-second heartbeat."],
+  ["LIVE FLEET DASHBOARD", "Every booth on one page from your phone: status, printer flags, paper remaining, revenue. And it emails you when a booth goes offline, errors, or runs low on paper."],
   ["REVENUE ANALYTICS", "Per-booth daily revenue, sessions, 30-day leaderboard. Export-ready numbers for landlords and partners."],
   ["LIVE ERROR FEED", "Every failure streams to the dashboard with the exact error and a log excerpt. No remote desktop, no log hunting."],
   ["REMOTE CONTROL †", "Push price and settings changes, restart the app, trigger a test print — all without visiting the booth."],
@@ -60,8 +60,8 @@ export default function Software() {
             booth online.
           </p>
           <div className="actions" style={{ marginTop: 36 }}>
-            <a className="btn" href="#pilot">Request pilot access</a>
-            <a className="btn" style={{ background: "transparent", color: "#000" }} href="/locations">See it running</a>
+            <a className="btn" href="/demo">View the live dashboard demo</a>
+            <a className="btn" style={{ background: "transparent", color: "#000" }} href="#pilot">Request pilot access</a>
           </div>
         </section>
 

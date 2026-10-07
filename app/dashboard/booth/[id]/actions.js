@@ -12,6 +12,21 @@ export async function sendCommand(boothId, command) {
   revalidatePath(`/dashboard/booth/${boothId}`);
 }
 
+export async function markPaperReloaded(boothId, formData) {
+  const capacity = parseInt(formData.get("capacity"), 10);
+  await db().from("pb_booths").update({
+    paper_loaded_at: new Date().toISOString(),
+    ...(Number.isFinite(capacity) && capacity >= 50 && capacity <= 2000
+      ? { paper_capacity: capacity } : {}),
+  }).eq("id", boothId);
+  // Clear a standing paper alert so the next low-paper episode emails again
+  await db().from("pb_alert_state").upsert({
+    booth_id: boothId, kind: "paper_low", active: false,
+    updated_at: new Date().toISOString(),
+  });
+  revalidatePath(`/dashboard/booth/${boothId}`);
+}
+
 export async function generatePairingCode(boothId, formData) {
   const plan = ["pro", "trial", "event_pass"].includes(formData.get("plan"))
     ? formData.get("plan") : "pro";

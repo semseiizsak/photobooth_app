@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/pb";
+import { runAlertSweep } from "@/lib/alerts";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,10 @@ export async function POST(req) {
       .update({ status: "delivered", delivered_at: new Date().toISOString() })
       .in("id", cmds.map((c) => c.id));
   }
+
+  // Fleet-wide alert sweep rides on heartbeats (throttled to 1/min inside);
+  // never allowed to fail the heartbeat.
+  try { await runAlertSweep(sb); } catch { /* best-effort */ }
 
   return NextResponse.json({
     ok: true,

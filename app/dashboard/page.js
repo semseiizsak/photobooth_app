@@ -12,13 +12,15 @@ export const dynamic = "force-dynamic";
 export default async function Fleet() {
   const sb = db();
   const since24h = new Date(Date.now() - 86400_000).toISOString();
-  const [{ data: booths }, { data: rev7 }, { data: errs }] = await Promise.all([
+  const [{ data: booths }, { data: rev7 }, { data: errs }, { data: paper }] = await Promise.all([
     sb.from("pb_booths").select("*").order("name"),
     sb.from("pb_daily_revenue").select("*").gte("day", daysBack(7)),
     sb.from("pb_events").select("booth_id,type,severity,data,occurred_at")
       .in("severity", ["error", "warning"]).gte("occurred_at", since24h)
       .order("occurred_at", { ascending: false }),
+    sb.from("pb_paper_used").select("*"),
   ]);
+  const usedBy = Object.fromEntries((paper || []).map((p) => [p.booth_id, p.used]));
 
   const list = booths || [];
   const today = todayBudapest();
@@ -91,6 +93,19 @@ export default async function Fleet() {
                       {hb.printer ? (hb.printer.ok ? "OK" : (hb.printer.issues || []).join(", ").toUpperCase()) : "—"}
                     </span>
                   </div>
+                  {b.paper_loaded_at && (() => {
+                    const cap = b.paper_capacity || 700;
+                    const left = Math.max(0, cap - (usedBy[b.id] ?? 0));
+                    const pct = Math.round((left / cap) * 100);
+                    return (
+                      <div className="row">
+                        <span className="label">Paper</span>
+                        <span className="mono" style={{ color: pct <= 10 ? "#d62828" : undefined }}>
+                          ~{left} · {pct}%
+                        </span>
+                      </div>
+                    );
+                  })()}
                   <div className="row">
                     <span className="label">7 days</span>
                     <Spark data={spark} />

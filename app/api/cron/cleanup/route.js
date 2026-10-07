@@ -29,5 +29,11 @@ export async function GET(req) {
   await sb.from("pb_licenses").update({ status: "lapsed" })
     .eq("status", "active").lt("expires_at", now);
 
+  // Alert sweep fallback for days with zero heartbeats fleet-wide
+  try {
+    const { runAlertSweep } = await import("@/lib/alerts");
+    await runAlertSweep(sb);
+  } catch { /* best-effort */ }
+
   return NextResponse.json({ ok: true, strips_deleted: (expired || []).length });
 }
