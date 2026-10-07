@@ -5,6 +5,7 @@ import {
 } from "@/lib/pb";
 import { Spark } from "@/lib/spark";
 import AutoRefresh from "../../dashboard/refresh";
+import { orgGeneratePairingCode } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -17,10 +18,13 @@ export default async function OrgFleet({ params }) {
   const { data: org } = await sb.from("pb_organizations").select("*").eq("slug", slug).single();
   if (!org) return <div className="empty">Unknown partner</div>;
 
-  const [{ data: booths }, { data: rev7 }] = await Promise.all([
+  const [{ data: booths }, { data: rev7 }, { data: codes }] = await Promise.all([
     sb.from("pb_booths").select("*").eq("org_id", org.id).order("name"),
     sb.from("pb_daily_revenue").select("*").gte("day", daysBack(7)),
+    sb.from("pb_pairing_codes").select("*")
+      .is("used_at", null).gte("expires_at", new Date().toISOString()),
   ]);
+  const codeByBooth = Object.fromEntries((codes || []).map((c) => [c.booth_id, c]));
   const list = booths || [];
   const ids = new Set(list.map((b) => b.id));
   const rows = (rev7 || []).filter((r) => ids.has(r.booth_id));
@@ -85,6 +89,47 @@ export default async function OrgFleet({ params }) {
           })}
         </div>
       )}
+
+      <div className="section"><h2>Set up a booth computer</h2>
+        <span className="label">generate a code, type it on the booth&apos;s first-run screen</span></div>
+      <div className="panel">
+        <table>
+          <thead><tr><th>Booth</th><th>Status</th><th>Pairing</th></tr></thead>
+          <tbody>
+            {list.map((b) => {
+              const c = codeByBooth[b.id];
+              const paired = boothStatus(b) !== "offline" || b.last_seen_at;
+              return (
+                <tr key={b.id}>
+                  <td>{b.name || b.kabin_id}</td>
+                  <td className="sans">{paired ? "connected" : "never paired"}</td>
+                  <td>
+                    {c ? (
+                      <span className="mono" style={{ fontSize: 20, letterSpacing: "0.25em" }}>
+                        {c.code}
+                        <span className="label" style={{ marginLeft: 12 }}>
+                          valid 10 min — type it on the booth
+                        </span>
+                      </span>
+                    ) : (
+                      <form action={orgGeneratePairingCode.bind(null, slug, b.id)}>
+                        <button className="ghost">
+                          {paired ? "Re-pair (new PC)" : "Generate pairing code"}
+                        </button>
+                      </form>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <p className="label" style={{ marginTop: 14 }}>
+          Re-pairing moves the license to the new computer and disables the old
+          one. Docs: <a href="/docs/quickstart" style={{ textDecoration: "underline" }}>quickstart</a> ·
+          <a href="/docs/hardware" style={{ textDecoration: "underline", marginLeft: 6 }}>hardware</a>
+        </p>
+      </div>
     </main>
   );
 }

@@ -39,11 +39,17 @@ export async function POST(req) {
   const expires_at = PLAN_DURATION_MS[pc.plan]
     ? new Date(now.getTime() + PLAN_DURATION_MS[pc.plan]).toISOString() : null;
 
+  // Guardrail: ONE active license per booth. Re-pairing (PC replacement)
+  // revokes the previous machine's license instead of multiplying them.
+  await sb.from("pb_licenses").update({ status: "revoked" })
+    .eq("booth_id", booth.id).eq("status", "active");
+
   const { error: licErr } = await sb.from("pb_licenses").insert({
     license_key,
     plan: pc.plan,
     machine_id,
     org_id: booth.org_id,
+    booth_id: booth.id,
     activated_at: now.toISOString(),
     last_validated: now.toISOString(),
     expires_at,
