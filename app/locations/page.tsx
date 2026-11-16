@@ -89,6 +89,15 @@ const LOCATIONS: Location[] = [
     mapsUrl: "https://maps.app.goo.gl/44nbK5CibdmsFgoJA",
     thumb: "/madach.jpg",
   },
+  {
+    id: 10,
+    name: "PHOTOAUTOMAT Gozsdu Udvar",
+    address: "Király utca 13, Budapest 1075",
+    lat: 47.49892,
+    lng: 19.05855,
+    mapsUrl: null, // TODO: add Google Maps link when it arrives
+    thumb: "/gozsdu-kiraly.jpg",
+  },
 ];
 
 const PHONE = "06703361957";
