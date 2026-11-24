@@ -98,6 +98,15 @@ const LOCATIONS: Location[] = [
     mapsUrl: null, // TODO: add Google Maps link when it arrives
     thumb: "/gozsdu-kiraly.jpg",
   },
+  {
+    id: 11,
+    name: "PHOTOAUTOMAT Károly",
+    address: "Károly krt. 17, Budapest 1075",
+    lat: 47.49715,
+    lng: 19.05654,
+    mapsUrl: "https://maps.app.goo.gl/3ojJ4gxqbHtNyYiG8",
+    thumb: "/karoly.jpg",
+  },
 ];
 
 const PHONE = "06703361957";
