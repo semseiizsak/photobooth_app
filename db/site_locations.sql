@@ -21,6 +21,11 @@ create table if not exists public.pb_site_locations (
 
 alter table public.pb_site_locations enable row level security;
 
+-- This project does not auto-grant new tables to the API roles; only the
+-- server (service_role) may touch this table. No delete: hide instead.
+grant select, insert, update on table public.pb_site_locations to service_role;
+grant usage, select on sequence public.pb_site_locations_id_seq to service_role;
+
 create index if not exists pb_site_locations_status_idx
   on public.pb_site_locations (status, sort_order, id);
 
